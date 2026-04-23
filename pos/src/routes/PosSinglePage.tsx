@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiBaseUrl, apiFetch, downloadWithAuth } from '../lib/api';
+import { apiBaseUrl, apiFetch, downloadWithAuth, publicApiBaseUrl, stripApiPrefix } from '../lib/api';
 import { clearAuth, getAuth, getAllSessions, switchSession, removeSession, type AuthState } from '../lib/auth';
 import { setAdminUnlocked } from '../lib/admin-unlock';
 import { getJson, setJson } from '../lib/storage';
@@ -1143,9 +1143,10 @@ export function PosSinglePage() {
       const share = await apiFetch<{ token: string; thermalPath: string; a4Path: string; feedbackPath?: string | null }>(`/sales/invoices/${invoiceResult.id}/share`, {
         method: 'POST'
       });
-      const thermalUrl = `${apiBaseUrl()}${share.thermalPath}`;
-      const a4Url = `${apiBaseUrl()}${share.a4Path}`;
-      const feedbackUrl = share.feedbackPath ? `${apiBaseUrl()}${share.feedbackPath}` : '';
+      const shareBase = publicApiBaseUrl();
+      const thermalUrl = `${shareBase}${stripApiPrefix(share.thermalPath)}`;
+      const a4Url = `${shareBase}${stripApiPrefix(share.a4Path)}`;
+      const feedbackUrl = share.feedbackPath ? `${shareBase}${stripApiPrefix(share.feedbackPath)}` : '';
       const total = paiseToRupeesString(paiseStringToBigInt(inv.invoice.grandTotalPaise));
       const who = (customerName || selectedCustomer?.fullName || 'Customer').trim();
       const storeName = store?.name || '';
@@ -1195,7 +1196,7 @@ export function PosSinglePage() {
       const share = await apiFetch<{ token: string; a4Path: string }>(`/pos/stitching/orders/${stitchingOrderId}/tailor-slip/share`, {
         method: 'POST'
       });
-      const a4Url = `${apiBaseUrl()}${share.a4Path}`;
+      const a4Url = `${publicApiBaseUrl()}${stripApiPrefix(share.a4Path)}`;
       const orderRef = stitchingOrderCode ? `Order ${stitchingOrderCode}` : 'Tailor Slip';
       const text =
         `Hello\n` +
@@ -1270,8 +1271,9 @@ export function PosSinglePage() {
       const share = await apiFetch<{ token: string; thermalPath: string; a4Path: string }>(`/sales/returns/${returnResult.id}/share`, {
         method: 'POST'
       });
-      const thermalUrl = `${apiBaseUrl()}${share.thermalPath}`;
-      const a4Url = `${apiBaseUrl()}${share.a4Path}`;
+      const shareBase = publicApiBaseUrl();
+      const thermalUrl = `${shareBase}${stripApiPrefix(share.thermalPath)}`;
+      const a4Url = `${shareBase}${stripApiPrefix(share.a4Path)}`;
       const amount = paiseToRupeesString(paiseStringToBigInt(returnResult.amountPaise));
       const mode = String(returnResult.mode || '');
       const extra =

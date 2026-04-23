@@ -6,6 +6,29 @@ export function apiBaseUrl() {
   return (import.meta as any).env?.VITE_API_BASE_URL?.toString() || '/api';
 }
 
+export function publicApiBaseUrl() {
+  const explicit = (import.meta as any).env?.VITE_PUBLIC_API_BASE_URL?.toString();
+  if (explicit && explicit.trim()) return explicit.trim().replace(/\/+$/, '');
+
+  const base = apiBaseUrl();
+  if (typeof base === 'string' && /^https?:\/\//i.test(base)) return base.replace(/\/+$/, '');
+
+  if (typeof window === 'undefined') return base;
+
+  const protocol = window.location.protocol;
+  const hostname = window.location.hostname;
+
+  if (hostname === 'localhost' || hostname === '127.0.0.1') return 'http://localhost:4000';
+  if (hostname.startsWith('pos.')) return `${protocol}//api.${hostname.slice('pos.'.length)}`;
+
+  return `${window.location.origin}${base}`.replace(/\/+$/, '');
+}
+
+export function stripApiPrefix(path: string) {
+  if (!path) return path;
+  return path.startsWith('/api/') ? path.slice('/api'.length) : path;
+}
+
 function coerceErrorMessage(body: unknown, status: number) {
   if (body && typeof body === 'object' && 'message' in body) {
     const m: any = (body as any).message;
