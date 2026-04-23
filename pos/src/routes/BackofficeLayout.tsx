@@ -86,7 +86,7 @@ export function BackofficeLayout() {
           <div className="boTopM">
             <button type="button" className="boBrandM" onClick={() => nav('/backoffice')} aria-label="Backoffice home">
               <div className="boBrandMarkM">
-                <img src="/sutra-logo.ico" alt="" />
+                <img src="/sutra-logo.svg" alt="" />
               </div>
               {expanded ? <div className="boBrandTextM">Sutra</div> : null}
             </button>

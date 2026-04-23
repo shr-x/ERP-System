@@ -36,7 +36,7 @@ export function StitchingAdminLayout() {
       <aside className="stSide">
         <div className="stBrand" onClick={() => nav('/backoffice/stitching/new')} role="button" tabIndex={0}>
           <div className="stMark">
-            <img src="/sutra-logo.ico" alt="" />
+            <img src="/sutra-logo.svg" alt="" />
           </div>
           <div className="stBrandText">
             <div className="stBrandName">Sutra</div>

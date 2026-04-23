@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
-const productCodeSchema = z.string().trim().regex(/^[A-Z0-9]{2,6}-\d{4}(?:-[A-Z0-9]{1,12})?$/);
+const productCodeSchema = z
+  .string()
+  .trim()
+  .regex(/^(?:[A-Z0-9]{2,6}-\d{4}(?:-[A-Z0-9]{1,12})?|[A-Z0-9]{2,12}(?:-[A-Z0-9]{2,12}){1,3})$/);
 const hsnSchema = z.string().trim().regex(/^\d{4,8}$/);
 
 const moneyRupeesSchema = z.union([

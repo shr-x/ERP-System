@@ -44,7 +44,7 @@ export function LoginPage() {
       <div className="loginLeft">
         <div className="loginBrand">
           <div className="loginBrandRow">
-            <img src="/sutra-logo.ico" alt="" className="loginLogo" />
+            <img src="/sutra-logo.svg" alt="" className="loginLogo" />
             <div className="loginBrandText">
               <div className="loginBrandName">Sutra</div>
               <div className="loginBrandTag">Covering of the Soul</div>

@@ -18,6 +18,12 @@ export async function buildUpiQrDataUrl(args: { invoiceNo: string; amountRupees:
 }
 
 export function tryLoadSutraLogoDataUrl() {
+  const svgPath = path.resolve(process.cwd(), 'Sutra-Logo.svg');
+  if (fs.existsSync(svgPath)) {
+    const buf = fs.readFileSync(svgPath);
+    return `data:image/svg+xml;base64,${buf.toString('base64')}`;
+  }
+
   const pngPath = path.resolve(process.cwd(), '..', 'Sutra-Logo.png');
   if (fs.existsSync(pngPath)) {
     const buf = fs.readFileSync(pngPath);
@@ -25,9 +31,12 @@ export function tryLoadSutraLogoDataUrl() {
   }
 
   const icoPath = path.resolve(process.cwd(), '..', 'Sutra-Logo.ico');
-  if (!fs.existsSync(icoPath)) return undefined;
-  const buf = fs.readFileSync(icoPath);
-  return `data:image/x-icon;base64,${buf.toString('base64')}`;
+  if (fs.existsSync(icoPath)) {
+    const buf = fs.readFileSync(icoPath);
+    return `data:image/x-icon;base64,${buf.toString('base64')}`;
+  }
+
+  return undefined;
 }
 
 export function renderA4InvoiceHtml(input: {
