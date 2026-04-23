@@ -14,6 +14,7 @@ RUN npm run prisma:generate
 
 COPY tsconfig.json tsconfig.build.json ./
 COPY src ./src
+COPY Sutra-Logo.svg ./Sutra-Logo.svg
 
 RUN npm run build
 
