@@ -1,0 +1,1109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id                        String                     @id @default(uuid()) @db.Uuid
+  name                      String
+  gstin                     String?
+  legalAddress              String
+  stateCode                 String                     @db.Char(2)
+  createdAt                 DateTime                   @default(now()) @db.Timestamptz(6)
+  updatedAt                 DateTime                   @updatedAt @db.Timestamptz(6)
+  auditLogs                 AuditLog[]
+  brandingAssets            BrandingAsset[]
+  chartAccounts             ChartAccount[]
+  customers                 Customer[]
+  customerCreditReceipts    CustomerCreditReceipt[]
+  customerCreditUses        CustomerCreditUse[]
+  customerCreditShareLinks  CustomerCreditShareLink[]
+  customerCreditSettlements CustomerCreditSettlement[]
+  feedbackLinks             FeedbackLink[]
+  feedbacks                 Feedback[]
+  inventoryBatches          InventoryBatch[]
+  invoiceSeries             InvoiceSeries[]
+  invoiceShareLinks         InvoiceShareLink[]
+  journalEntries            JournalEntry[]
+  journalLines              JournalLine[]
+  loyaltyLedger             LoyaltyLedger[]
+  payments                  Payment[]
+  printJobs                 PrintJob[]
+  products                  Product[]
+  productCategories         ProductCategory[]
+  purchaseInvoices          PurchaseInvoice[]
+  purchaseInvoiceLines      PurchaseInvoiceLine[]
+  coupons                   Coupon[]
+  couponRedemptions         CouponRedemption[]
+  reportExports             ReportExport[]
+  salesCarts                SalesCart[]
+  salesInvoices             SalesInvoice[]
+  salesInvoiceLines         SalesInvoiceLine[]
+  salesReturns              SalesReturn[]
+  salesReturnLines          SalesReturnLine[]
+  salesReturnShareLinks     SalesReturnShareLink[]
+  stockMoves                StockMove[]
+  stockMoveLines            StockMoveLine[]
+  stores                    Store[]
+  suppliers                 Supplier[]
+  users                     User[]
+  warehouses                Warehouse[]
+  stitchingProductTemplates StitchingProductTemplate[]
+  stitchingTemplateCategories StitchingTemplateCategory[]
+  stitchingCustomerProfiles StitchingCustomerProfile[]
+  stitchingTailors          StitchingTailor[]
+  stitchingOrders           StitchingOrder[]
+  stitchingTailorSlipLinks  StitchingTailorSlipShareLink[]
+}
+
+model BrandingAsset {
+  id           String       @id @default(uuid()) @db.Uuid
+  orgId        String       @db.Uuid
+  logoFilePath String
+  logoMime     String
+  updatedAt    DateTime     @updatedAt @db.Timestamptz(6)
+  org          Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+}
+
+model Store {
+  id                        String                     @id @default(uuid()) @db.Uuid
+  orgId                     String                     @db.Uuid
+  code                      String
+  name                      String
+  address                   String
+  phone                     String?
+  stateCode                 String                     @db.Char(2)
+  gstin                     String?
+  footerNote                String?
+  isActive                  Boolean                    @default(true)
+  createdAt                 DateTime                   @default(now()) @db.Timestamptz(6)
+  updatedAt                 DateTime                   @updatedAt @db.Timestamptz(6)
+  invoiceSeries             InvoiceSeries[]
+  journalEntries            JournalEntry[]
+  payments                  Payment[]
+  purchaseInvoices          PurchaseInvoice[]
+  couponRedemptions         CouponRedemption[]
+  reportExports             ReportExport[]
+  salesCarts                SalesCart[]
+  salesInvoices             SalesInvoice[]
+  salesReturns              SalesReturn[]
+  stitchingOrders           StitchingOrder[]
+  customerCreditReceipts    CustomerCreditReceipt[]
+  customerCreditUses        CustomerCreditUse[]
+  customerCreditSettlements CustomerCreditSettlement[]
+  stockMoves                StockMove[]
+  org                       Organization               @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  users                     User[]
+  warehouses                Warehouse[]
+
+  @@unique([orgId, code])
+  @@index([orgId])
+}
+
+model Warehouse {
+  id             String           @id @default(uuid()) @db.Uuid
+  orgId          String           @db.Uuid
+  storeId        String           @db.Uuid
+  name           String
+  isActive       Boolean          @default(true)
+  createdAt      DateTime         @default(now()) @db.Timestamptz(6)
+  batches        InventoryBatch[]
+  stockMovesFrom StockMove[]      @relation("StockMoveFromWarehouse")
+  stockMovesTo   StockMove[]      @relation("StockMoveToWarehouse")
+  org            Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store          Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, name])
+  @@index([orgId])
+}
+
+model User {
+  id                               String                     @id @default(uuid()) @db.Uuid
+  orgId                            String                     @db.Uuid
+  storeId                          String?                    @db.Uuid
+  fullName                         String
+  phone                            String
+  email                            String?
+  passwordHash                     String
+  role                             UserRole
+  isActive                         Boolean                    @default(true)
+  createdAt                        DateTime                   @default(now()) @db.Timestamptz(6)
+  updatedAt                        DateTime                   @updatedAt @db.Timestamptz(6)
+  auditLogs                        AuditLog[]
+  couponsCreated                   Coupon[]
+  couponRedemptions                CouponRedemption[]
+  journalEntries                   JournalEntry[]
+  salesCarts                       SalesCart[]
+  salesInvoices                    SalesInvoice[]
+  salesReturnsProcessed            SalesReturn[]
+  customerCreditReceiptsCreated    CustomerCreditReceipt[]    @relation("CustomerCreditReceiptCreatedBy")
+  customerCreditUsesCreated        CustomerCreditUse[]        @relation("CustomerCreditUseUsedBy")
+  customerCreditSettlementsCreated CustomerCreditSettlement[] @relation("CustomerCreditSettlementCreatedBy")
+  org                              Organization               @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store                            Store?                     @relation(fields: [storeId], references: [id])
+
+  @@unique([orgId, phone])
+  @@unique([orgId, email])
+  @@index([orgId, storeId])
+}
+
+model AuditLog {
+  id          String       @id @default(uuid()) @db.Uuid
+  orgId       String       @db.Uuid
+  actorUserId String?      @db.Uuid
+  action      String
+  entityType  String
+  entityId    String?      @db.Uuid
+  meta        Json         @default("{}")
+  createdAt   DateTime     @default(now()) @db.Timestamptz(6)
+  actor       User?        @relation(fields: [actorUserId], references: [id])
+  org         Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, createdAt(sort: Desc)])
+  @@index([orgId, entityType, entityId])
+}
+
+model Customer {
+  id                 String                     @id @default(uuid()) @db.Uuid
+  orgId              String                     @db.Uuid
+  fullName           String
+  phone              String?
+  gstin              String?
+  isBusiness         Boolean                    @default(false)
+  stateCode          String?                    @db.Char(2)
+  address            String?
+  pincode            String?                    @db.Char(6)
+  isBlocked          Boolean                    @default(false)
+  blockedAt          DateTime?                  @db.Timestamptz(6)
+  creditBalancePaise BigInt                     @default(0)
+  creditDuePaise     BigInt                     @default(0)
+  isWalkIn           Boolean                    @default(false)
+  createdAt          DateTime                   @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime                   @updatedAt @db.Timestamptz(6)
+  org                Organization               @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  loyaltyLedger      LoyaltyLedger[]
+  salesCarts         SalesCart[]
+  salesInvoices      SalesInvoice[]
+  salesReturns       SalesReturn[]
+  creditReceipts     CustomerCreditReceipt[]
+  creditUses         CustomerCreditUse[]
+  creditSettlements  CustomerCreditSettlement[]
+  feedbacks          Feedback[]
+  stitchingProfiles  StitchingCustomerProfile[]
+
+  @@unique([orgId, phone])
+  @@index([orgId])
+}
+
+model CustomerCreditSettlement {
+  id              String        @id @default(uuid()) @db.Uuid
+  orgId           String        @db.Uuid
+  storeId         String        @db.Uuid
+  customerId      String        @db.Uuid
+  salesInvoiceId  String?       @db.Uuid
+  referenceNo     String?
+  amountPaise     BigInt
+  method          PaymentMethod
+  upiRef          String?
+  createdByUserId String        @db.Uuid
+  createdAt       DateTime      @default(now()) @db.Timestamptz(6)
+
+  org          Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store        Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  customer     Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  salesInvoice SalesInvoice? @relation(fields: [salesInvoiceId], references: [id], onDelete: SetNull)
+  createdBy    User          @relation("CustomerCreditSettlementCreatedBy", fields: [createdByUserId], references: [id])
+  printJobs    PrintJob[]
+
+  @@index([orgId, createdAt(sort: Desc)])
+  @@index([orgId, customerId, createdAt(sort: Desc)])
+  @@index([orgId, storeId, createdAt(sort: Desc)])
+}
+
+model LoyaltyLedger {
+  id          String            @id @default(uuid()) @db.Uuid
+  orgId       String            @db.Uuid
+  customerId  String            @db.Uuid
+  sourceType  LoyaltySourceType
+  sourceId    String?           @db.Uuid
+  pointsDelta Int
+  createdAt   DateTime          @default(now()) @db.Timestamptz(6)
+  customer    Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  org         Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, customerId, createdAt(sort: Desc)])
+}
+
+model Product {
+  id                   String                @id @default(uuid()) @db.Uuid
+  orgId                String                @db.Uuid
+  code                 String
+  name                 String
+  sizeLabel            String                @default("NO_SIZE")
+  parentProductId      String?               @db.Uuid
+  hsnCode              String
+  gstRateBp            Int
+  sellingPricePaise    BigInt
+  costPricePaise       BigInt
+  posVisible           Boolean               @default(true)
+  isPortalManaged      Boolean               @default(false)
+  isActive             Boolean               @default(true)
+  createdAt            DateTime              @default(now()) @db.Timestamptz(6)
+  updatedAt            DateTime              @updatedAt @db.Timestamptz(6)
+  imageUrl             String?
+  imageData            Bytes?
+  imageMime            String?
+  categoryId           String?               @db.Uuid
+  batches              InventoryBatch[]
+  category             ProductCategory?      @relation(fields: [categoryId], references: [id])
+  parentProduct        Product?              @relation("ProductParent", fields: [parentProductId], references: [id], onDelete: SetNull)
+  variants             Product[]             @relation("ProductParent")
+  org                  Organization          @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  purchaseInvoiceLines PurchaseInvoiceLine[]
+  salesInvoiceLines    SalesInvoiceLine[]
+  salesReturnLines     SalesReturnLine[]
+  stockMoveLines       StockMoveLine[]
+
+  @@unique([orgId, code])
+  @@unique([orgId, parentProductId, sizeLabel])
+  @@index([orgId, name])
+  @@index([orgId, sizeLabel])
+  @@index([orgId, categoryId])
+  @@index([orgId, parentProductId])
+}
+
+model ProductCategory {
+  id        String       @id @default(uuid()) @db.Uuid
+  orgId     String       @db.Uuid
+  name      String
+  imageUrl  String?
+  imageData Bytes?
+  imageMime String?
+  posVisible Boolean      @default(true)
+  createdAt DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime     @updatedAt @db.Timestamptz(6)
+  products  Product[]
+  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, name])
+  @@index([orgId])
+}
+
+model InventoryBatch {
+  id             String          @id @default(uuid()) @db.Uuid
+  orgId          String          @db.Uuid
+  warehouseId    String          @db.Uuid
+  productId      String          @db.Uuid
+  batchNo        String
+  expiryDate     DateTime?       @db.Date
+  qtyReceived    Decimal         @db.Decimal(14, 3)
+  qtyAvailable   Decimal         @db.Decimal(14, 3)
+  receivedAt     DateTime        @db.Timestamptz(6)
+  unitCostPaise  BigInt
+  org            Organization    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  product        Product         @relation(fields: [productId], references: [id])
+  warehouse      Warehouse       @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  stockMoveLines StockMoveLine[]
+
+  @@index([warehouseId, productId, receivedAt])
+  @@index([orgId])
+}
+
+model StockMove {
+  id              String          @id @default(uuid()) @db.Uuid
+  orgId           String          @db.Uuid
+  storeId         String          @db.Uuid
+  moveType        StockMoveType
+  sourceRef       String?
+  createdAt       DateTime        @default(now()) @db.Timestamptz(6)
+  fromWarehouseId String?         @db.Uuid
+  toWarehouseId   String?         @db.Uuid
+  fromWarehouse   Warehouse?      @relation("StockMoveFromWarehouse", fields: [fromWarehouseId], references: [id])
+  org             Organization    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store           Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  toWarehouse     Warehouse?      @relation("StockMoveToWarehouse", fields: [toWarehouseId], references: [id])
+  lines           StockMoveLine[]
+
+  @@index([orgId, storeId, createdAt(sort: Desc)])
+  @@index([orgId, fromWarehouseId, createdAt(sort: Desc)])
+  @@index([orgId, toWarehouseId, createdAt(sort: Desc)])
+}
+
+model StockMoveLine {
+  id            String          @id @default(uuid()) @db.Uuid
+  orgId         String          @db.Uuid
+  stockMoveId   String          @db.Uuid
+  productId     String          @db.Uuid
+  batchId       String?         @db.Uuid
+  qtyDelta      Decimal         @db.Decimal(14, 3)
+  unitCostPaise BigInt?
+  batch         InventoryBatch? @relation(fields: [batchId], references: [id])
+  org           Organization    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  product       Product         @relation(fields: [productId], references: [id])
+  stockMove     StockMove       @relation(fields: [stockMoveId], references: [id], onDelete: Cascade)
+
+  @@index([productId, batchId])
+  @@index([orgId])
+}
+
+model SalesCart {
+  id              String       @id @default(uuid()) @db.Uuid
+  orgId           String       @db.Uuid
+  storeId         String       @db.Uuid
+  createdByUserId String       @db.Uuid
+  customerId      String?      @db.Uuid
+  status          CartStatus
+  createdAt       DateTime     @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime     @updatedAt @db.Timestamptz(6)
+  createdBy       User         @relation(fields: [createdByUserId], references: [id])
+  customer        Customer?    @relation(fields: [customerId], references: [id])
+  org             Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store           Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, storeId, updatedAt(sort: Desc)])
+}
+
+model SalesInvoice {
+  id                      String                     @id @default(uuid()) @db.Uuid
+  orgId                   String                     @db.Uuid
+  storeId                 String                     @db.Uuid
+  invoiceNo               String
+  invoiceDate             DateTime                   @db.Timestamptz(6)
+  cashierUserId           String                     @db.Uuid
+  customerId              String                     @db.Uuid
+  sellerGstin             String
+  sellerStateCode         String                     @db.Char(2)
+  placeOfSupplyStateCode  String                     @db.Char(2)
+  taxRegime               InvoiceTaxRegime
+  subtotalPaise           BigInt
+  discountTotalPaise      BigInt                     @default(0)
+  loyaltyRedeemPoints     Int                        @default(0)
+  storeCreditAppliedPaise BigInt                     @default(0)
+  taxTotalPaise           BigInt
+  cgstTotalPaise          BigInt
+  sgstTotalPaise          BigInt
+  igstTotalPaise          BigInt
+  grandTotalPaise         BigInt
+  roundingPaise           BigInt                     @default(0)
+  status                  SalesInvoiceStatus
+  createdAt               DateTime                   @default(now()) @db.Timestamptz(6)
+  deliveryAddress         String?
+  deliveryPincode         String?                    @db.Char(6)
+  shareLinks              InvoiceShareLink[]
+  journalEntries          JournalEntry[]
+  payments                Payment[]
+  couponRedemptions       CouponRedemption[]
+  customerCreditUse       CustomerCreditUse?
+  creditSettlements       CustomerCreditSettlement[]
+  feedbackLink            FeedbackLink?
+  feedbacks               Feedback[]
+  returns                 SalesReturn[]
+  printJobs               PrintJob[]
+  cashier                 User                       @relation(fields: [cashierUserId], references: [id])
+  customer                Customer                   @relation(fields: [customerId], references: [id])
+  org                     Organization               @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store                   Store                      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  lines                   SalesInvoiceLine[]
+
+  @@unique([orgId, storeId, invoiceNo])
+  @@index([storeId, invoiceDate(sort: Desc)])
+  @@index([orgId, invoiceNo])
+}
+
+model SalesInvoiceLine {
+  id                String            @id @default(uuid()) @db.Uuid
+  orgId             String            @db.Uuid
+  invoiceId         String            @db.Uuid
+  lineNo            Int
+  productId         String            @db.Uuid
+  productName       String
+  hsnCode           String
+  gstRateBp         Int
+  qty               Decimal           @db.Decimal(14, 3)
+  unitPricePaise    BigInt
+  discountPaise     BigInt            @default(0)
+  taxableValuePaise BigInt
+  cgstRateBp        Int
+  sgstRateBp        Int
+  igstRateBp        Int
+  cgstAmountPaise   BigInt
+  sgstAmountPaise   BigInt
+  igstAmountPaise   BigInt
+  lineTotalPaise    BigInt
+  invoice           SalesInvoice      @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  returnLines       SalesReturnLine[]
+  org               Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  product           Product           @relation(fields: [productId], references: [id])
+
+  @@unique([invoiceId, lineNo])
+  @@index([orgId])
+}
+
+model Payment {
+  id          String        @id @default(uuid()) @db.Uuid
+  orgId       String        @db.Uuid
+  storeId     String        @db.Uuid
+  invoiceId   String        @db.Uuid
+  method      PaymentMethod
+  amountPaise BigInt
+  upiRef      String?
+  receivedAt  DateTime      @default(now()) @db.Timestamptz(6)
+  invoice     SalesInvoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  org         Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store       Store         @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, storeId, receivedAt(sort: Desc)])
+}
+
+model InvoiceSeries {
+  id            String       @id @default(uuid()) @db.Uuid
+  orgId         String       @db.Uuid
+  storeId       String       @db.Uuid
+  financialYear String
+  prefix        String
+  nextNumber    Int
+  org           Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store         Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+  @@unique([storeId, financialYear])
+  @@index([orgId])
+}
+
+model Supplier {
+  id               String            @id @default(uuid()) @db.Uuid
+  orgId            String            @db.Uuid
+  name             String
+  gstin            String?
+  stateCode        String?           @db.Char(2)
+  createdAt        DateTime          @default(now()) @db.Timestamptz(6)
+  purchaseInvoices PurchaseInvoice[]
+  org              Organization      @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, name])
+  @@index([orgId])
+}
+
+model PurchaseInvoice {
+  id                String                @id @default(uuid()) @db.Uuid
+  orgId             String                @db.Uuid
+  storeId           String                @db.Uuid
+  supplierId        String                @db.Uuid
+  supplierInvoiceNo String
+  invoiceDate       DateTime              @db.Date
+  subtotalPaise     BigInt
+  taxTotalPaise     BigInt
+  cgstTotalPaise    BigInt
+  sgstTotalPaise    BigInt
+  igstTotalPaise    BigInt
+  grandTotalPaise   BigInt
+  createdAt         DateTime              @default(now()) @db.Timestamptz(6)
+  journalEntries    JournalEntry[]
+  org               Organization          @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store             Store                 @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  supplier          Supplier              @relation(fields: [supplierId], references: [id])
+  lines             PurchaseInvoiceLine[]
+
+  @@index([orgId, storeId, createdAt(sort: Desc)])
+}
+
+model PurchaseInvoiceLine {
+  id                String          @id @default(uuid()) @db.Uuid
+  orgId             String          @db.Uuid
+  purchaseInvoiceId String          @db.Uuid
+  lineNo            Int
+  productId         String          @db.Uuid
+  hsnCode           String
+  gstRateBp         Int
+  qty               Decimal         @db.Decimal(14, 3)
+  unitCostPaise     BigInt
+  taxableValuePaise BigInt
+  cgstRateBp        Int
+  sgstRateBp        Int
+  igstRateBp        Int
+  cgstAmountPaise   BigInt
+  sgstAmountPaise   BigInt
+  igstAmountPaise   BigInt
+  lineTotalPaise    BigInt
+  org               Organization    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  product           Product         @relation(fields: [productId], references: [id])
+  purchaseInvoice   PurchaseInvoice @relation(fields: [purchaseInvoiceId], references: [id], onDelete: Cascade)
+
+  @@unique([purchaseInvoiceId, lineNo])
+  @@index([orgId])
+}
+
+model ChartAccount {
+  id        String        @id @default(uuid()) @db.Uuid
+  orgId     String        @db.Uuid
+  code      String
+  name      String
+  type      AccountType
+  isSystem  Boolean       @default(false)
+  createdAt DateTime      @default(now()) @db.Timestamptz(6)
+  org       Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  lines     JournalLine[]
+
+  @@unique([orgId, code])
+  @@index([orgId])
+}
+
+model JournalEntry {
+  id                String             @id @default(uuid()) @db.Uuid
+  orgId             String             @db.Uuid
+  storeId           String             @db.Uuid
+  entryDate         DateTime           @db.Timestamptz(6)
+  sourceType        JournalSourceType
+  salesInvoiceId    String?            @db.Uuid
+  purchaseInvoiceId String?            @db.Uuid
+  narration         String
+  postedByUserId    String             @db.Uuid
+  status            JournalEntryStatus @default(DRAFT)
+  createdAt         DateTime           @default(now()) @db.Timestamptz(6)
+  org               Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  postedBy          User               @relation(fields: [postedByUserId], references: [id])
+  purchaseInvoice   PurchaseInvoice?   @relation(fields: [purchaseInvoiceId], references: [id])
+  salesInvoice      SalesInvoice?      @relation(fields: [salesInvoiceId], references: [id])
+  store             Store              @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  lines             JournalLine[]
+
+  @@index([orgId, entryDate(sort: Desc)])
+}
+
+model JournalLine {
+  id             String       @id @default(uuid()) @db.Uuid
+  orgId          String       @db.Uuid
+  journalEntryId String       @db.Uuid
+  accountId      String       @db.Uuid
+  debitPaise     BigInt       @default(0)
+  creditPaise    BigInt       @default(0)
+  account        ChartAccount @relation(fields: [accountId], references: [id])
+  journalEntry   JournalEntry @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
+  org            Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+}
+
+model PrintJob {
+  id              String                 @id @default(uuid()) @db.Uuid
+  orgId           String                 @db.Uuid
+  kind            PrintJobKind           @default(INVOICE)
+  invoiceId       String?                @db.Uuid
+  salesReturnId   String?                @db.Uuid
+  creditReceiptId String?                @db.Uuid
+  creditSettlementId String?             @db.Uuid
+  format          PrintFormat
+  pdfPath         String?
+  htmlSnapshot    String?
+  createdAt       DateTime               @default(now()) @db.Timestamptz(6)
+  htmlPath        String?
+  invoice         SalesInvoice?          @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  salesReturn     SalesReturn?           @relation(fields: [salesReturnId], references: [id], onDelete: Cascade)
+  creditReceipt   CustomerCreditReceipt? @relation(fields: [creditReceiptId], references: [id], onDelete: Cascade)
+  creditSettlement CustomerCreditSettlement? @relation(fields: [creditSettlementId], references: [id], onDelete: Cascade)
+  org             Organization           @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, createdAt(sort: Desc)])
+  @@index([orgId, kind, createdAt(sort: Desc)])
+}
+
+enum PrintJobKind {
+  INVOICE
+  RETURN
+  CREDIT_RECEIPT
+  CREDIT_SETTLEMENT
+}
+
+model ReportExport {
+  id          String       @id @default(uuid()) @db.Uuid
+  orgId       String       @db.Uuid
+  storeId     String?      @db.Uuid
+  reportType  ReportType
+  periodStart DateTime     @db.Date
+  periodEnd   DateTime     @db.Date
+  filePath    String
+  createdAt   DateTime     @default(now()) @db.Timestamptz(6)
+  org         Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store       Store?       @relation(fields: [storeId], references: [id])
+
+  @@index([orgId, createdAt(sort: Desc)])
+}
+
+model InvoiceShareLink {
+  id        String       @id @default(uuid()) @db.Uuid
+  orgId     String       @db.Uuid
+  invoiceId String       @db.Uuid
+  token     String       @unique
+  expiresAt DateTime?    @db.Timestamptz(6)
+  createdAt DateTime     @default(now()) @db.Timestamptz(6)
+  invoice   SalesInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, createdAt(sort: Desc)])
+}
+
+model SalesReturnShareLink {
+  id            String       @id @default(uuid()) @db.Uuid
+  orgId         String       @db.Uuid
+  salesReturnId String       @db.Uuid
+  token         String       @unique
+  expiresAt     DateTime?    @db.Timestamptz(6)
+  createdAt     DateTime     @default(now()) @db.Timestamptz(6)
+  salesReturn   SalesReturn  @relation(fields: [salesReturnId], references: [id], onDelete: Cascade)
+  org           Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, createdAt(sort: Desc)])
+  @@index([orgId, salesReturnId])
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+}
+
+enum CartStatus {
+  DRAFT
+  ABANDONED
+  CONVERTED
+}
+
+enum InvoiceTaxRegime {
+  INTRA_STATE
+  INTER_STATE
+}
+
+enum SalesInvoiceStatus {
+  ISSUED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  DEBIT_CARD
+  CREDIT
+  STORE_CREDIT
+}
+
+enum StockMoveType {
+  SALE
+  PURCHASE
+  TRANSFER_OUT
+  TRANSFER_IN
+  ADJUSTMENT
+  RETURN
+}
+
+model CustomerCreditReceipt {
+  id              String        @id @default(uuid()) @db.Uuid
+  orgId           String        @db.Uuid
+  storeId         String        @db.Uuid
+  receiptNo       String
+  receiptDate     DateTime      @db.Timestamptz(6)
+  customerId      String        @db.Uuid
+  amountPaise     BigInt
+  method          PaymentMethod
+  upiRef          String?
+  createdByUserId String        @db.Uuid
+  createdAt       DateTime      @default(now()) @db.Timestamptz(6)
+
+  org        Organization              @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store      Store                     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  customer   Customer                  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  createdBy  User                      @relation("CustomerCreditReceiptCreatedBy", fields: [createdByUserId], references: [id])
+  shareLinks CustomerCreditShareLink[]
+  printJobs  PrintJob[]
+
+  @@unique([orgId, storeId, receiptNo])
+  @@index([orgId, storeId, receiptDate(sort: Desc)])
+  @@index([orgId, customerId, receiptDate(sort: Desc)])
+}
+
+model CustomerCreditUse {
+  id           String   @id @default(uuid()) @db.Uuid
+  orgId        String   @db.Uuid
+  storeId      String   @db.Uuid
+  invoiceId    String   @db.Uuid
+  customerId   String   @db.Uuid
+  amountPaise  BigInt
+  usedByUserId String   @db.Uuid
+  usedAt       DateTime @default(now()) @db.Timestamptz(6)
+
+  org      Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store    Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  invoice  SalesInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  customer Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  usedBy   User         @relation("CustomerCreditUseUsedBy", fields: [usedByUserId], references: [id])
+
+  @@unique([invoiceId])
+  @@index([orgId, customerId, usedAt(sort: Desc)])
+}
+
+model CustomerCreditShareLink {
+  id        String    @id @default(uuid()) @db.Uuid
+  orgId     String    @db.Uuid
+  receiptId String    @db.Uuid
+  token     String    @unique
+  expiresAt DateTime? @db.Timestamptz(6)
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+
+  receipt CustomerCreditReceipt @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+  org     Organization          @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, createdAt(sort: Desc)])
+  @@index([orgId, receiptId])
+}
+
+model FeedbackLink {
+  id        String   @id @default(uuid()) @db.Uuid
+  orgId     String   @db.Uuid
+  invoiceId String   @db.Uuid
+  token     String   @unique
+  expiresAt DateTime @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  org     Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  invoice SalesInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@unique([invoiceId])
+  @@index([orgId, createdAt(sort: Desc)])
+}
+
+model Feedback {
+  id           String   @id @default(uuid()) @db.Uuid
+  orgId        String   @db.Uuid
+  invoiceId    String   @db.Uuid
+  customerId   String?  @db.Uuid
+  customerName String
+  rating       Int
+  comment      String?
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+
+  org      Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  invoice  SalesInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  customer Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@unique([invoiceId])
+  @@index([orgId, createdAt(sort: Desc)])
+  @@index([orgId, invoiceId])
+}
+
+enum JournalSourceType {
+  SALE
+  PURCHASE
+  EXPENSE
+  ADJUSTMENT
+  RETURN
+  CUSTOMER_CREDIT
+}
+
+enum JournalEntryStatus {
+  POSTED
+  REVERSED
+  DRAFT
+}
+
+enum AccountType {
+  ASSET
+  LIABILITY
+  INCOME
+  EXPENSE
+  EQUITY
+}
+
+enum PrintFormat {
+  A4
+  THERMAL_80MM
+}
+
+enum ReportType {
+  GSTR1
+  GSTR3B
+  SALES_SUMMARY
+  INVENTORY
+}
+
+enum LoyaltySourceType {
+  SALE
+  ADJUSTMENT
+  REDEMPTION
+  RETURN
+}
+
+enum ReturnCreditMode {
+  LOYALTY
+  COUPON
+}
+
+model Coupon {
+  id              String             @id @default(uuid()) @db.Uuid
+  orgId           String             @db.Uuid
+  code            String
+  title           String?
+  amountPaise     BigInt
+  usesTotal       Int
+  usesRemaining   Int
+  validFrom       DateTime           @default(now()) @db.Timestamptz(6)
+  validTo         DateTime?          @db.Timestamptz(6)
+  isActive        Boolean            @default(true)
+  createdByUserId String             @db.Uuid
+  createdAt       DateTime           @default(now()) @db.Timestamptz(6)
+  org             Organization       @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  createdBy       User               @relation(fields: [createdByUserId], references: [id])
+  redemptions     CouponRedemption[]
+  returns         SalesReturn[]
+
+  @@unique([orgId, code])
+  @@index([orgId, createdAt(sort: Desc)])
+}
+
+model CouponRedemption {
+  id                 String       @id @default(uuid()) @db.Uuid
+  orgId              String       @db.Uuid
+  storeId            String       @db.Uuid
+  couponId           String       @db.Uuid
+  invoiceId          String       @db.Uuid
+  redeemedByUserId   String       @db.Uuid
+  amountAppliedPaise BigInt
+  redeemedAt         DateTime     @default(now()) @db.Timestamptz(6)
+  org                Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store              Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  coupon             Coupon       @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  invoice            SalesInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  redeemedBy         User         @relation(fields: [redeemedByUserId], references: [id])
+
+  @@unique([couponId, invoiceId])
+  @@index([orgId, storeId, redeemedAt(sort: Desc)])
+  @@index([orgId, couponId, redeemedAt(sort: Desc)])
+}
+
+model SalesReturn {
+  id                String           @id @default(uuid()) @db.Uuid
+  orgId             String           @db.Uuid
+  storeId           String           @db.Uuid
+  salesInvoiceId    String           @db.Uuid
+  invoiceNo         String
+  customerId        String           @db.Uuid
+  processedByUserId String           @db.Uuid
+  mode              ReturnCreditMode
+  amountPaise       BigInt
+  pointsCredited    Int              @default(0)
+  couponId          String?          @db.Uuid
+  createdAt         DateTime         @default(now()) @db.Timestamptz(6)
+
+  org         Organization           @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store       Store                  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  invoice     SalesInvoice           @relation(fields: [salesInvoiceId], references: [id], onDelete: Cascade)
+  customer    Customer               @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  processedBy User                   @relation(fields: [processedByUserId], references: [id])
+  coupon      Coupon?                @relation(fields: [couponId], references: [id], onDelete: SetNull)
+  lines       SalesReturnLine[]
+  shareLinks  SalesReturnShareLink[]
+  printJobs   PrintJob[]
+
+  @@index([orgId, storeId, createdAt(sort: Desc)])
+  @@index([orgId, invoiceNo])
+}
+
+model SalesReturnLine {
+  id                 String           @id @default(uuid()) @db.Uuid
+  orgId              String           @db.Uuid
+  salesReturnId      String           @db.Uuid
+  salesInvoiceLineId String           @db.Uuid
+  productId          String           @db.Uuid
+  productName        String
+  hsnCode            String
+  gstRateBp          Int
+  qty                Decimal          @db.Decimal(14, 3)
+  taxableValuePaise  BigInt
+  cgstAmountPaise    BigInt
+  sgstAmountPaise    BigInt
+  igstAmountPaise    BigInt
+  lineTotalPaise     BigInt
+  salesReturn        SalesReturn      @relation(fields: [salesReturnId], references: [id], onDelete: Cascade)
+  invoiceLine        SalesInvoiceLine @relation(fields: [salesInvoiceLineId], references: [id], onDelete: Cascade)
+  product            Product          @relation(fields: [productId], references: [id])
+  org                Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([salesReturnId])
+}
+
+enum StitchingProductCategory {
+  FULL_SET
+  TOP
+  PANTS
+  SLEEVES
+}
+
+enum StitchingOrderStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum StitchingMaterialSource {
+  STORE
+  CUSTOMER
+}
+
+model StitchingTemplateCategory {
+  id         String                  @id @default(uuid()) @db.Uuid
+  orgId      String                  @db.Uuid
+  name       String
+  posVisible Boolean                 @default(true)
+  createdAt  DateTime                @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime                @updatedAt @db.Timestamptz(6)
+  templates  StitchingProductTemplate[]
+  org        Organization            @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, name])
+  @@index([orgId])
+}
+
+model StitchingProductTemplate {
+  id                  String                              @id @default(uuid()) @db.Uuid
+  orgId               String                              @db.Uuid
+  name                String
+  category            StitchingProductCategory
+  categoryId          String?                             @db.Uuid
+  createdAt           DateTime                            @default(now()) @db.Timestamptz(6)
+  updatedAt           DateTime                            @updatedAt @db.Timestamptz(6)
+  measurementProfiles StitchingProductMeasurementProfile[]
+  colors              StitchingProductColor[]
+  materialConfigs     StitchingProductMaterialConfig[]
+  orders              StitchingOrder[]
+  categoryRef         StitchingTemplateCategory?           @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  org                 Organization                        @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([orgId, category])
+  @@index([orgId, categoryId])
+}
+
+model StitchingProductMeasurementProfile {
+  id              String                   @id @default(uuid()) @db.Uuid
+  productId       String                   @db.Uuid
+  measurementName String
+  fields          String[]
+  product         StitchingProductTemplate @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, measurementName])
+  @@index([productId])
+}
+
+model StitchingProductColor {
+  id        String                   @id @default(uuid()) @db.Uuid
+  productId String                   @db.Uuid
+  colorName String                   @default("")
+  colorCode String                   @db.VarChar(7)
+  imageUrl  String?
+  imageData Bytes?
+  imageMime String?
+  product   StitchingProductTemplate @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, colorCode])
+  @@index([productId])
+}
+
+model StitchingProductMaterialConfig {
+  id            String                   @id @default(uuid()) @db.Uuid
+  productId     String                   @db.Uuid
+  erpMaterialId String                   @db.Uuid
+  metersRequired Decimal                 @db.Decimal(14, 3)
+  product       StitchingProductTemplate @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model StitchingCustomerProfile {
+  id            String           @id @default(uuid()) @db.Uuid
+  orgId         String           @db.Uuid
+  erpCustomerId String           @db.Uuid
+  notes         String?
+  createdAt     DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime         @updatedAt @db.Timestamptz(6)
+  orders        StitchingOrder[]
+  org           Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  erpCustomer   Customer         @relation(fields: [erpCustomerId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, erpCustomerId])
+  @@index([orgId, createdAt(sort: Desc)])
+}
+
+model StitchingTailor {
+  id        String           @id @default(uuid()) @db.Uuid
+  orgId     String           @db.Uuid
+  name      String
+  phone     String
+  isActive  Boolean          @default(true)
+  createdAt DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime         @updatedAt @db.Timestamptz(6)
+  orders    StitchingOrder[]
+  org       Organization     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, phone])
+  @@index([orgId, isActive])
+}
+
+model StitchingOrder {
+  id                    String                @id @default(uuid()) @db.Uuid
+  orgId                 String                @db.Uuid
+  storeId               String?               @db.Uuid
+  orderCode             String
+  erpInvoiceId          String?
+  customerProfileId     String?               @db.Uuid
+  productTemplateId     String                @db.Uuid
+  materialSource        StitchingMaterialSource @default(STORE)
+  selectedColorName     String?
+  selectedColorCode     String
+  selectedColorImageUrl String?
+  measurementProfileName String?
+  measurements          Json                  @default("{}")
+  erpMaterialId         String?               @db.Uuid
+  materialUsageMeters   Decimal?              @db.Decimal(14, 3)
+  tailorId              String?               @db.Uuid
+  deliveryDate          DateTime              @db.Timestamptz(6)
+  pricePaise            BigInt
+  gstRateBp             Int
+  gstAmountPaise        BigInt
+  tailorCostPaise       BigInt                @default(0)
+  gstOnTailor           Boolean               @default(false)
+  tailorGstRateBp       Int                   @default(0)
+  tailorExpenseJournalEntryId String?
+  tailorExpensePostedAt DateTime?             @db.Timestamptz(6)
+  status                StitchingOrderStatus  @default(PENDING)
+  createdAt             DateTime              @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime              @updatedAt @db.Timestamptz(6)
+
+  org             Organization            @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  store           Store?                   @relation(fields: [storeId], references: [id], onDelete: SetNull)
+  customerProfile StitchingCustomerProfile? @relation(fields: [customerProfileId], references: [id], onDelete: SetNull)
+  productTemplate StitchingProductTemplate @relation(fields: [productTemplateId], references: [id], onDelete: Restrict)
+  tailor          StitchingTailor?        @relation(fields: [tailorId], references: [id], onDelete: SetNull)
+
+  @@unique([orgId, orderCode])
+  @@index([orgId, status, deliveryDate(sort: Desc)])
+  @@index([orgId, orderCode])
+  @@index([orgId, customerProfileId])
+  @@index([orgId, tailorId])
+  @@index([orgId, storeId])
+}
+
+model StitchingTailorSlipShareLink {
+  id        String       @id @default(uuid()) @db.Uuid
+  orgId     String       @db.Uuid
+  orderId   String       @db.Uuid
+  token     String       @unique
+  expiresAt DateTime?    @db.Timestamptz(6)
+  createdAt DateTime     @default(now()) @db.Timestamptz(6)
+  org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId])
+  @@index([orderId])
+}

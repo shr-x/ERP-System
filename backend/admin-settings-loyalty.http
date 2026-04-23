@@ -1,0 +1,24 @@
+@baseUrl = http://localhost:4023
+@token = REPLACE_WITH_ACCESS_TOKEN
+
+### Store details (used on invoices and GST reports)
+GET {{baseUrl}}/stores
+Authorization: Bearer {{token}}
+
+### Update a store (ADMIN)
+PATCH {{baseUrl}}/stores/REPLACE_WITH_STORE_ID
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Sutra Collections",
+  "phone": "911234567890",
+  "address": "MG Road, Bengaluru, Karnataka",
+  "gstin": "29ABCDE1234F1Z5",
+  "footerNote": "Thank you for shopping with Sutra"
+}
+
+### Loyalty lookup (for POS customer)
+GET {{baseUrl}}/loyalty?phone=9123456789
+Authorization: Bearer {{token}}
+

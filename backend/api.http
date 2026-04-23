@@ -1,0 +1,275 @@
+@baseUrl = http://localhost:4023
+@token = REPLACE_WITH_ACCESS_TOKEN
+
+### Health
+GET {{baseUrl}}/health
+
+### Bootstrap system (run once on a fresh database)
+POST {{baseUrl}}/auth/bootstrap
+Content-Type: application/json
+
+{
+  "org": {
+    "name": "Sutra Retail Pvt Ltd",
+    "gstin": "29ABCDE1234F1Z5",
+    "legalAddress": "Bengaluru, Karnataka, India",
+    "stateCode": "29"
+  },
+  "store": {
+    "code": "BLR1",
+    "name": "Bengaluru Store 1",
+    "address": "Bengaluru, Karnataka, India",
+    "stateCode": "29"
+  },
+  "admin": {
+    "fullName": "Admin User",
+    "phone": "9999999999",
+    "email": "admin@sutra.local",
+    "password": "Admin@12345"
+  }
+}
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "phoneOrEmail": "9999999999",
+  "password": "Admin@12345"
+}
+
+### Current user (paste token above)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### Initialize starter catalog (ADMIN only)
+POST {{baseUrl}}/products/starter-catalog
+Authorization: Bearer {{token}}
+
+### Customers: search (non-walk-in)
+GET {{baseUrl}}/customers?q=rahul
+Authorization: Bearer {{token}}
+
+### Customers: create (for delivery orders)
+POST {{baseUrl}}/customers
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fullName": "Rahul Sharma",
+  "phone": "9123456789",
+  "stateCode": "29"
+}
+
+### Accounting: initialize system accounts (ADMIN only)
+POST {{baseUrl}}/accounting/setup-system-accounts
+Authorization: Bearer {{token}}
+
+### Accounting: chart of accounts
+GET {{baseUrl}}/accounting/coa
+Authorization: Bearer {{token}}
+
+### Accounting: journal entries (current store)
+GET {{baseUrl}}/accounting/journal-entries
+Authorization: Bearer {{token}}
+
+### GST: GSTR-3B JSON summary (ITC utilization)
+POST {{baseUrl}}/gst/gstr3b/summary
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "periodStart": "2026-04-01",
+  "periodEnd": "2026-04-30"
+}
+
+### GST: ITC register (purchase invoices)
+POST {{baseUrl}}/gst/itc-register
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "periodStart": "2026-04-01",
+  "periodEnd": "2026-04-30"
+}
+
+### GST: Export GSTR-1 (XLSX)
+POST {{baseUrl}}/gst/gstr1/export?format=XLSX
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "periodStart": "2026-04-01",
+  "periodEnd": "2026-04-30"
+}
+
+### GST: Export GSTR-3B (XLSX)
+POST {{baseUrl}}/gst/gstr3b/export?format=XLSX
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "periodStart": "2026-04-01",
+  "periodEnd": "2026-04-30"
+}
+
+### GST: Download export file by id
+GET {{baseUrl}}/gst/exports/REPLACE_WITH_EXPORT_ID/download
+Authorization: Bearer {{token}}
+
+### Stores: list stores
+GET {{baseUrl}}/stores
+Authorization: Bearer {{token}}
+
+### Stores: create store (ADMIN only)
+POST {{baseUrl}}/stores
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "code": "BLR2",
+  "name": "Bengaluru Store 2",
+  "address": "Bengaluru, Karnataka, India",
+  "stateCode": "29"
+}
+
+### Warehouses: create (ADMIN only)
+POST {{baseUrl}}/warehouses
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "storeId": "REPLACE_WITH_STORE_ID",
+  "name": "Central"
+}
+
+### Warehouses: list for a store
+GET {{baseUrl}}/warehouses?storeId=REPLACE_WITH_STORE_ID
+Authorization: Bearer {{token}}
+
+### Inventory: receive stock into a warehouse (ADMIN only)
+POST {{baseUrl}}/inventory/receive
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "warehouseId": "REPLACE_WITH_WAREHOUSE_ID",
+  "productId": "REPLACE_WITH_PRODUCT_ID",
+  "batchNo": "BATCH-001",
+  "expiryDate": "2027-12-31",
+  "qty": 10,
+  "unitCostRupees": 70
+}
+
+### Sales: create invoice
+POST {{baseUrl}}/sales/invoices
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "storeWarehouseId": "REPLACE_WITH_STORE_WAREHOUSE_ID",
+  "customerId": "OPTIONAL_CUSTOMER_ID",
+  "placeOfSupplyStateCode": "29",
+  "items": [
+    {
+      "productId": "REPLACE_WITH_PRODUCT_ID",
+      "qty": 1,
+      "unitPriceRupees": 100,
+      "discountRupees": 0
+    }
+  ],
+  "payment": {
+    "method": "CASH",
+    "amountRupees": 105,
+    "upiRef": ""
+  }
+}
+
+### Coupons: create (ADMIN only)
+POST {{baseUrl}}/coupons
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "code": "CPN-TEST-100",
+  "title": "Test coupon",
+  "amountRupees": 100,
+  "usesTotal": 3,
+  "validFrom": "2026-04-01",
+  "validTo": "2026-06-30"
+}
+
+### Coupons: list (ADMIN only)
+GET {{baseUrl}}/coupons
+Authorization: Bearer {{token}}
+
+### Coupons: validate (POS)
+GET {{baseUrl}}/coupons/validate?code=CPN-TEST-100
+Authorization: Bearer {{token}}
+
+### Sales: create invoice with coupon redemption (coupon applied as STORE_CREDIT)
+POST {{baseUrl}}/sales/invoices
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "storeWarehouseId": "REPLACE_WITH_STORE_WAREHOUSE_ID",
+  "customerId": "OPTIONAL_CUSTOMER_ID",
+  "placeOfSupplyStateCode": "29",
+  "couponCode": "CPN-TEST-100",
+  "items": [
+    {
+      "productId": "REPLACE_WITH_PRODUCT_ID",
+      "qty": 1,
+      "unitPriceRupees": 100,
+      "discountRupees": 0
+    }
+  ],
+  "payment": {
+    "method": "CASH",
+    "amountRupees": 5,
+    "upiRef": ""
+  }
+}
+
+### Sales: invoice lookup for return (by invoice number)
+GET {{baseUrl}}/sales/invoices/lookup?invoiceNo=REPLACE_WITH_INVOICE_NO
+Authorization: Bearer {{token}}
+
+### Sales: accept return against an invoice (auto: LOYALTY if customer has phone, else COUPON)
+POST {{baseUrl}}/sales/returns
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "invoiceNo": "REPLACE_WITH_INVOICE_NO",
+  "storeWarehouseId": "REPLACE_WITH_STORE_WAREHOUSE_ID",
+  "lines": [
+    {
+      "salesInvoiceLineId": "REPLACE_WITH_INVOICE_LINE_ID",
+      "qty": 1
+    }
+  ]
+}
+
+### Sales: create return share link (thermal + A4)
+POST {{baseUrl}}/sales/returns/REPLACE_WITH_SALES_RETURN_ID/share
+Authorization: Bearer {{token}}
+
+### Sales: list returns (ADMIN only)
+GET {{baseUrl}}/sales/returns?storeId=&q=
+Authorization: Bearer {{token}}
+
+### Accounting: manual journal entry (ADMIN only)
+POST {{baseUrl}}/accounting/journal-entries/manual
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "entryDate": "2026-04-15",
+  "narration": "Office expense",
+  "lines": [
+    { "accountId": "REPLACE_WITH_EXPENSE_ACCOUNT_ID", "debitRupees": 500 },
+    { "accountId": "REPLACE_WITH_CASH_ACCOUNT_ID", "creditRupees": 500 }
+  ]
+}
