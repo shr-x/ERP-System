@@ -627,7 +627,7 @@ export function PortalPage() {
       <div className="tw-min-h-screen tw-bg-bg">
         <div className="tw-mx-auto tw-max-w-[760px] tw-px-6 tw-py-10 tw-space-y-6">
           <div className="tw-flex tw-items-center tw-gap-3">
-            <img src="/sutra-logo.svg" alt="" className="tw-h-10 tw-w-10 tw-rounded-[10px]" />
+            <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="" className="tw-h-10 tw-w-10 tw-rounded-[10px]" />
             <div>
               <div className="tw-text-[20px] tw-font-semibold tw-text-ink">Sutra Portal</div>
               <div className="tw-text-[12px] tw-text-muted">Standalone admin portal (not linked from POS/Backoffice)</div>
@@ -675,7 +675,7 @@ export function PortalPage() {
       <div className="tw-border-b tw-border-line tw-bg-white">
         <div className="tw-mx-auto tw-max-w-[1280px] tw-px-6 tw-py-5 tw-flex tw-items-start tw-justify-between tw-gap-6">
           <div className="tw-flex tw-items-center tw-gap-3">
-            <img src="/sutra-logo.svg" alt="" className="tw-h-9 tw-w-9 tw-rounded-[10px]" />
+            <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="" className="tw-h-9 tw-w-9 tw-rounded-[10px]" />
             <div>
               <div className="tw-flex tw-items-center tw-gap-2">
                 <div className="tw-text-[18px] tw-font-semibold tw-text-ink">Sutra Portal</div>

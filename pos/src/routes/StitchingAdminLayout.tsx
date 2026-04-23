@@ -2,6 +2,7 @@ import { NavLink, Navigate, Outlet, useLocation, useNavigate, useSearchParams } 
 import { useEffect, useMemo, useState } from 'react';
 import { getAuth } from '../lib/auth';
 import { StButton, StInput } from '../components/stitching/AdminUi';
+import { apiBaseUrl } from '../lib/api';
 
 function tabTitle(pathname: string) {
   if (pathname.includes('/backoffice/stitching/new')) return 'Manage Products';
@@ -36,7 +37,7 @@ export function StitchingAdminLayout() {
       <aside className="stSide">
         <div className="stBrand" onClick={() => nav('/backoffice/stitching/new')} role="button" tabIndex={0}>
           <div className="stMark">
-            <img src="/sutra-logo.svg" alt="" />
+            <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="" />
           </div>
           <div className="stBrandText">
             <div className="stBrandName">Sutra</div>

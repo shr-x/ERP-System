@@ -18,21 +18,45 @@ export async function buildUpiQrDataUrl(args: { invoiceNo: string; amountRupees:
 }
 
 export function tryLoadSutraLogoDataUrl() {
-  const svgPath = path.resolve(process.cwd(), 'Sutra-Logo.svg');
-  if (fs.existsSync(svgPath)) {
-    const buf = fs.readFileSync(svgPath);
+  const resolveExisting = (paths: string[]) => {
+    for (const p of paths) {
+      try {
+        if (fs.existsSync(p)) return p;
+      } catch {}
+    }
+    return undefined;
+  };
+
+  const trySvg = resolveExisting([
+    path.resolve(process.cwd(), 'Sutra-Logo.svg'),
+    path.resolve(process.cwd(), '..', 'Sutra-Logo.svg'),
+    path.resolve(__dirname, '..', '..', '..', 'Sutra-Logo.svg'),
+    path.resolve(__dirname, '..', '..', '..', '..', 'Sutra-Logo.svg')
+  ]);
+  if (trySvg) {
+    const buf = fs.readFileSync(trySvg);
     return `data:image/svg+xml;base64,${buf.toString('base64')}`;
   }
 
-  const pngPath = path.resolve(process.cwd(), '..', 'Sutra-Logo.png');
-  if (fs.existsSync(pngPath)) {
-    const buf = fs.readFileSync(pngPath);
+  const tryPng = resolveExisting([
+    path.resolve(process.cwd(), 'Sutra-Logo.png'),
+    path.resolve(process.cwd(), '..', 'Sutra-Logo.png'),
+    path.resolve(__dirname, '..', '..', '..', 'Sutra-Logo.png'),
+    path.resolve(__dirname, '..', '..', '..', '..', 'Sutra-Logo.png')
+  ]);
+  if (tryPng) {
+    const buf = fs.readFileSync(tryPng);
     return `data:image/png;base64,${buf.toString('base64')}`;
   }
 
-  const icoPath = path.resolve(process.cwd(), '..', 'Sutra-Logo.ico');
-  if (fs.existsSync(icoPath)) {
-    const buf = fs.readFileSync(icoPath);
+  const tryIco = resolveExisting([
+    path.resolve(process.cwd(), 'Sutra-Logo.ico'),
+    path.resolve(process.cwd(), '..', 'Sutra-Logo.ico'),
+    path.resolve(__dirname, '..', '..', '..', 'Sutra-Logo.ico'),
+    path.resolve(__dirname, '..', '..', '..', '..', 'Sutra-Logo.ico')
+  ]);
+  if (tryIco) {
+    const buf = fs.readFileSync(tryIco);
     return `data:image/x-icon;base64,${buf.toString('base64')}`;
   }
 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { clearAuth } from '../lib/auth';
 import { BoIcon } from '../components/BoIcon';
+import { apiBaseUrl } from '../lib/api';
 
 export function BackofficeLayout() {
   const nav = useNavigate();
@@ -86,7 +87,7 @@ export function BackofficeLayout() {
           <div className="boTopM">
             <button type="button" className="boBrandM" onClick={() => nav('/backoffice')} aria-label="Backoffice home">
               <div className="boBrandMarkM">
-                <img src="/sutra-logo.svg" alt="" />
+                <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="" />
               </div>
               {expanded ? <div className="boBrandTextM">Sutra</div> : null}
             </button>

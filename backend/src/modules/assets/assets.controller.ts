@@ -7,12 +7,25 @@ import type { Response } from 'express';
 export class AssetsController {
   @Get('logo.svg')
   async logoSvg(@Res() res: Response) {
-    const svgPath = path.resolve(process.cwd(), 'Sutra-Logo.svg');
-    if (!fs.existsSync(svgPath)) {
+    const candidates = [
+      path.resolve(process.cwd(), 'Sutra-Logo.svg'),
+      path.resolve(process.cwd(), '..', 'Sutra-Logo.svg'),
+      path.resolve(__dirname, '..', '..', '..', 'Sutra-Logo.svg'),
+      path.resolve(__dirname, '..', '..', '..', '..', 'Sutra-Logo.svg')
+    ];
+    const svgPath = candidates.find((p) => {
+      try {
+        return fs.existsSync(p);
+      } catch {
+        return false;
+      }
+    });
+    if (!svgPath) {
       res.status(404).json({ message: 'Logo not found' });
       return;
     }
     res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
     res.sendFile(svgPath);
   }
 

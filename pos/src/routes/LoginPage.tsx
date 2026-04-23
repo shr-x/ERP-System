@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../lib/api';
+import { apiBaseUrl } from '../lib/api';
 import { setAuth } from '../lib/auth';
 
 export function LoginPage() {
@@ -44,7 +45,7 @@ export function LoginPage() {
       <div className="loginLeft">
         <div className="loginBrand">
           <div className="loginBrandRow">
-            <img src="/sutra-logo.svg" alt="" className="loginLogo" />
+            <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="" className="loginLogo" />
             <div className="loginBrandText">
               <div className="loginBrandName">Sutra</div>
               <div className="loginBrandTag">Covering of the Soul</div>

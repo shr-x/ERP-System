@@ -1590,7 +1590,7 @@ export function PosSinglePage() {
       <div className="posShell">
         <div className="posSide">
           <div className="posSideTop">
-            <img src={`${apiBaseUrl()}/assets/logo.ico`} alt="Sutra" className="posSideLogo" />
+            <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="Sutra" className="posSideLogo" />
           </div>
           <div className="posNav">
             <button className={`posNavBtn ${activeNav === 'POS' ? 'active' : ''}`} onClick={() => {

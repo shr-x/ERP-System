@@ -535,7 +535,7 @@ export function PosWizardPage() {
     <div className="gWrap">
       <div className="gTop">
         <div className="gBrand">
-          <img src={`${apiBaseUrl()}/assets/logo.ico`} alt="Sutra" className="gLogo" />
+          <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="Sutra" className="gLogo" />
           <div className="gMeta">
             <div className="gTitle">Level {step} / 5</div>
             <div className="gSub">
