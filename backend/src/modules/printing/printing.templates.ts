@@ -229,7 +229,7 @@ export function renderA4InvoiceHtml(input: {
     <head>
       <meta charset="utf-8" />
       <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 40px; color:#111; }
+        body { font-family: 'Noto Sans', 'DejaVu Sans', Arial, sans-serif; margin: 40px; color:#111; }
         .container { max-width: 900px; margin: auto; }
         .header { display:flex; justify-content:space-between; margin-bottom: 24px; align-items:flex-start; }
         .logo { height: 70px; }
@@ -468,7 +468,7 @@ export function renderThermalReceiptHtml(input: {
       <head>
         <meta charset="utf-8" />
         <style>
-          body { font-family: monospace; width: 280px; margin: auto; font-size: 13px; color: #111; }
+          body { font-family: 'DejaVu Sans Mono', 'Noto Sans Mono', monospace; width: 280px; margin: auto; font-size: 13px; color: #111; }
           .center { text-align: center; }
           .muted { color:#333; font-size: 12px; }
           .title { font-size: 14px; font-weight: 800; }
@@ -603,7 +603,7 @@ export function renderA4ReturnHtml(input: {
     <head>
       <meta charset="utf-8" />
       <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 40px; color:#111; }
+        body { font-family: 'Noto Sans', 'DejaVu Sans', Arial, sans-serif; margin: 40px; color:#111; }
         .container { max-width: 900px; margin: auto; }
         .header { display:flex; justify-content:space-between; margin-bottom: 24px; align-items:flex-start; }
         .logo { height: 70px; }
@@ -743,7 +743,7 @@ export function renderThermalReturnReceiptHtml(input: {
       <head>
         <meta charset="utf-8" />
         <style>
-          body { font-family: monospace; width: 280px; margin: auto; font-size: 13px; color: #111; }
+          body { font-family: 'DejaVu Sans Mono', 'Noto Sans Mono', monospace; width: 280px; margin: auto; font-size: 13px; color: #111; }
           .center { text-align: center; }
           .muted { color:#333; font-size: 12px; }
           .line { border-top: 1px dashed black; margin: 8px 0; }
@@ -826,7 +826,7 @@ export function renderA4CreditReceiptHtml(input: {
     <head>
       <meta charset="utf-8" />
       <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 40px; color:#111; }
+        body { font-family: 'Noto Sans', 'DejaVu Sans', Arial, sans-serif; margin: 40px; color:#111; }
         .container { max-width: 900px; margin: auto; }
         .header { display:flex; justify-content:space-between; margin-bottom: 24px; align-items:flex-start; }
         .logo { height: 70px; }
@@ -915,7 +915,7 @@ export function renderA4CreditSettlementHtml(input: {
     <head>
       <meta charset="utf-8" />
       <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 40px; color:#111; }
+        body { font-family: 'Noto Sans', 'DejaVu Sans', Arial, sans-serif; margin: 40px; color:#111; }
         .container { max-width: 900px; margin: auto; }
         .header { display:flex; justify-content:space-between; margin-bottom: 24px; align-items:flex-start; }
         .logo { height: 70px; }
@@ -997,7 +997,7 @@ export function renderThermalCreditReceiptHtml(input: {
       <head>
         <meta charset="utf-8" />
         <style>
-          body { font-family: monospace; width: 280px; margin: auto; font-size: 13px; color: #111; }
+          body { font-family: 'DejaVu Sans Mono', 'Noto Sans Mono', monospace; width: 280px; margin: auto; font-size: 13px; color: #111; }
           .center { text-align: center; }
           .muted { color:#333; font-size: 12px; }
           .line { border-top: 1px dashed black; margin: 8px 0; }
@@ -1060,7 +1060,7 @@ export function renderThermalCreditSettlementHtml(input: {
       <head>
         <meta charset="utf-8" />
         <style>
-          body { font-family: monospace; width: 280px; margin: auto; font-size: 13px; color: #111; }
+          body { font-family: 'DejaVu Sans Mono', 'Noto Sans Mono', monospace; width: 280px; margin: auto; font-size: 13px; color: #111; }
           .center { text-align: center; }
           .muted { color:#333; font-size: 12px; }
           .line { border-top: 1px dashed black; margin: 8px 0; }
