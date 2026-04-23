@@ -6,7 +6,9 @@ GST-first retail ERP for small Indian businesses: a fast POS + a lightweight Adm
 
 - **POS + Backoffice UI**: React (Vite) single-page app in `pos/`
 - **Backend API**: NestJS + Prisma + PostgreSQL in `backend/`
-- **Exports & printing**: XLSX/PDF generation and invoice/receipt rendering (Puppeteer)
+- **Stitching Portal**: Integrated module for tailoring & custom product measurements
+- **Exports & printing**: XLSX/PDF/JSON generation and invoice/receipt rendering (Puppeteer)
+- **Deployment**: Docker Compose configuration ready for Dokploy
 
 ## Product principles (why the system behaves the way it does)
 
@@ -16,6 +18,7 @@ GST-first retail ERP for small Indian businesses: a fast POS + a lightweight Adm
 - **Walk-in supported**: customer is optional; POS can bill without attaching a customer.
 - **Two print formats**: thermal receipt + A4 invoice.
 - **Double-entry accounting**: every posting enforces Total Debit = Total Credit (no incorrect entries).
+- **Extensible**: Native support for Custom Stitching measurements, categories, and POS flows.
 
 ## Architecture
 
@@ -201,7 +204,7 @@ flowchart LR
 ### Requirements
 
 - Node.js (LTS recommended: 22)
-- Docker Desktop (recommended for local PostgreSQL)
+- Docker Desktop (recommended for local PostgreSQL & deployment testing)
 - Google Chrome (used by Puppeteer for PDFs)
 
 ### 1) Start PostgreSQL (dev)
@@ -217,11 +220,17 @@ Create `backend/.env` (copy `backend/.env.example` and edit if needed):
 
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5433/sutra_erp?schema=public"
-PORT=4023
+PORT=4000
 JWT_ACCESS_SECRET="change_me"
 PUPPETEER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 UPI_VPA="sutra@upi"
 UPI_PAYEE_NAME="Sutra Retail"
+```
+
+Create `pos/.env.production` (or `.env` for local dev):
+
+```env
+VITE_API_BASE_URL=http://localhost:4000
 ```
 
 ### 3) Reset DB + apply migrations
@@ -239,7 +248,7 @@ cd backend
 npm run dev
 ```
 
-Health check: `GET http://localhost:4023/health`
+Health check: `GET http://localhost:4000/health`
 
 ### 5) Run POS + Backoffice UI
 
@@ -249,7 +258,19 @@ npm install
 npm run dev
 ```
 
-UI: `http://localhost:5174`
+UI: `http://localhost:5173`
+
+## Production Deployment (Dokploy / Docker Compose)
+
+The project includes a root `compose.yaml` and `Dockerfile`s for both backend and frontend. It is optimized for zero-config deployment on Dokploy or any Docker Swarm/Compose environment.
+
+```bash
+# Build and run the entire stack locally for production testing
+docker compose up --build
+```
+
+- **Backend** runs on port `4000` internally.
+- **Frontend** runs on port `5174` and serves static files while proxying `/api` requests to the backend.
 
 ## Demo seed contents (what “real store-ish” means here)
 
@@ -374,8 +395,8 @@ erDiagram
 
 ## Roles & permissions
 
-- **ADMIN**: full access (setup accounts, create staff, post journals, GST exports, products/categories, warehouses)
-- **STAFF**: POS operations only (billing, customers, loyalty); restricted from admin modules
+- **ADMIN**: full access (setup accounts, create staff, post journals, GST exports, products/categories, warehouses, Stitching configuration)
+- **STAFF**: POS operations only (billing, customers, loyalty, stitching orders); restricted from admin modules
 
 ## Inventory rules (how stock works)
 
@@ -569,10 +590,16 @@ Token-gated share endpoints (no JWT):
 - `POST /gst/itc-register` ITC register (JWT + ADMIN)
 - `GET /gst/exports/:id/download` download an export file by id (JWT)
 
+### Stitching Module (`/stitching/*`)
+- Custom category and product template definitions
+- Measurement profiles & tailoring configurations
+- Order lifecycle tracking (Pending -> In Progress -> Completed)
+- Tailor slips & assignment
+
 ## Production checklist
 
 - Set a strong `JWT_ACCESS_SECRET`
 - Use real Postgres credentials (not `postgres:postgres`)
-- Run backend with `npm run build && npm run start`
-- Serve `pos/dist` behind nginx and proxy `/api` to backend
-- Ensure Chrome executable exists on server for PDF generation (or disable PDF features)
+- The `docker compose up --build` command handles the Node/Vite build process.
+- The backend Dockerfile automatically installs `chromium` to support PDF generation via Puppeteer.
+- Ensure the production environment defines `VITE_API_BASE_URL=/api` so the frontend server correctly proxies API requests.
