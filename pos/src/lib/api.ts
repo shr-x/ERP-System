@@ -3,7 +3,7 @@ import { clearAuth, getAuth } from './auth';
 export type ApiError = { status: number; message: string; details?: unknown };
 
 export function apiBaseUrl() {
-  return (import.meta as any).env?.VITE_API_BASE_URL?.toString() || 'http://localhost:4000';
+  return (import.meta as any).env?.VITE_API_BASE_URL?.toString() || '/api';
 }
 
 function coerceErrorMessage(body: unknown, status: number) {
