@@ -42,9 +42,9 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
-    command: tunnel run sutra
+    command: tunnel --config /etc/cloudflared/config.yml run sutra
     volumes:
-      - 'C:\Users\spart\.cloudflared:/etc/cloudflared:ro'
+      - C:\Users\spart\.cloudflared:/etc/cloudflared:ro
     depends_on:
       - pos
       - backend
