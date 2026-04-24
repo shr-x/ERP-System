@@ -53,7 +53,7 @@ function coerceErrorMessage(body: unknown, status: number) {
 async function portalFetch<T>(args: { portalKey: string; path: string; init?: RequestInit }): Promise<T> {
   const headers: Record<string, string> = {
     Accept: 'application/json',
-    'x-sutra-portal-key': args.portalKey.trim(),
+    'x-shrx-portal-key': args.portalKey.trim(),
     ...(args.init?.headers ? (args.init.headers as any) : {})
   };
 
@@ -76,7 +76,7 @@ function rupeesFromPaiseString(paise: string) {
   return (n / 100).toFixed(2);
 }
 
-const PORTAL_KEY_STORAGE = 'sutra_portal_key_v1';
+const PORTAL_KEY_STORAGE = 'shrx_portal_key_v1';
 
 function renderOptions(options: Array<{ value: string; label: string }>) {
   return options.map((o) => (
@@ -629,7 +629,7 @@ export function PortalPage() {
           <div className="tw-flex tw-items-center tw-gap-3">
             <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="" className="tw-h-10 tw-w-10 tw-rounded-[10px]" />
             <div>
-              <div className="tw-text-[20px] tw-font-semibold tw-text-ink">Sutra Portal</div>
+              <div className="tw-text-[20px] tw-font-semibold tw-text-ink">Shr-x ERP Portal</div>
               <div className="tw-text-[12px] tw-text-muted">Standalone admin portal (not linked from POS/Backoffice)</div>
             </div>
           </div>
@@ -678,7 +678,7 @@ export function PortalPage() {
             <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="" className="tw-h-9 tw-w-9 tw-rounded-[10px]" />
             <div>
               <div className="tw-flex tw-items-center tw-gap-2">
-                <div className="tw-text-[18px] tw-font-semibold tw-text-ink">Sutra Portal</div>
+                <div className="tw-text-[18px] tw-font-semibold tw-text-ink">Shr-x ERP Portal</div>
                 <StBadge tone="neutral">Private</StBadge>
               </div>
               <div className="tw-text-[12px] tw-text-muted">Admin users, direct products/stock, stitching templates</div>

@@ -14,7 +14,8 @@ RUN npm run prisma:generate
 
 COPY tsconfig.json tsconfig.build.json ./
 COPY src ./src
-COPY Sutra-Logo.svg ./Sutra-Logo.svg
+COPY Shrx-ERP-Logo.svg ./Shrx-ERP-Logo.svg
+COPY Shrx-ERP-Logo.ico ./Shrx-ERP-Logo.ico
 
 RUN npm run build
 

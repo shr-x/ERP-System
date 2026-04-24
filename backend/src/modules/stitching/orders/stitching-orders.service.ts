@@ -374,7 +374,7 @@ export class StitchingOrdersService {
     const imageUrl = await this.resolveOrderImageUrlForDocs(orgId, (order as any).selectedColorImageUrl);
     const productCategory = (order as any)?.productTemplate?.categoryRef?.name ?? order.productTemplate.category;
     const html = renderStitchingCustomerBillA4({
-      storeName: store?.name ?? org?.name ?? 'Sutra ERP',
+      storeName: store?.name ?? org?.name ?? 'Shr-x ERP',
       gstin: store?.gstin ?? undefined,
       storePhone: store?.phone ?? undefined,
       storeAddress: store?.address ?? undefined,
@@ -415,7 +415,7 @@ export class StitchingOrdersService {
       : null;
     const customer = order.customerProfile?.erpCustomer;
     return renderStitchingCustomerBillThermal({
-      storeName: store?.name ?? org?.name ?? 'Sutra ERP',
+      storeName: store?.name ?? org?.name ?? 'Shr-x ERP',
       gstin: store?.gstin ?? undefined,
       orderCode: order.orderCode,
       invoiceNo: undefined,
@@ -451,7 +451,7 @@ export class StitchingOrdersService {
     const imageUrl = await this.resolveOrderImageUrlForDocs(orgId, (order as any).selectedColorImageUrl);
     const productCategory = (order as any)?.productTemplate?.categoryRef?.name ?? order.productTemplate.category;
     const html = renderStitchingTailorSlipA4({
-      storeName: store?.name ?? org?.name ?? 'Sutra ERP',
+      storeName: store?.name ?? org?.name ?? 'Shr-x ERP',
       gstin: store?.gstin ?? undefined,
       storePhone: store?.phone ?? undefined,
       storeAddress: store?.address ?? undefined,
@@ -486,7 +486,7 @@ export class StitchingOrdersService {
       : null;
     const imageUrl = await this.resolveOrderImageUrlForDocs(orgId, (order as any).selectedColorImageUrl);
     return renderStitchingTailorSlipThermal({
-      storeName: store?.name ?? org?.name ?? 'Sutra ERP',
+      storeName: store?.name ?? org?.name ?? 'Shr-x ERP',
       gstin: store?.gstin ?? undefined,
       orderCode: order.orderCode,
       productName: order.productTemplate.name,

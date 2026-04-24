@@ -89,7 +89,7 @@ export function BackofficeLayout() {
               <div className="boBrandMarkM">
                 <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="" />
               </div>
-              {expanded ? <div className="boBrandTextM">Sutra</div> : null}
+              {expanded ? <div className="boBrandTextM">Shr-x ERP</div> : null}
             </button>
           </div>
 

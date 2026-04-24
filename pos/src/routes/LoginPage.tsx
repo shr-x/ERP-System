@@ -47,8 +47,8 @@ export function LoginPage() {
           <div className="loginBrandRow">
             <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="" className="loginLogo" />
             <div className="loginBrandText">
-              <div className="loginBrandName">Sutra</div>
-              <div className="loginBrandTag">Covering of the Soul</div>
+              <div className="loginBrandName">Shr-x ERP</div>
+              <div className="loginBrandTag">GST-first retail ERP</div>
             </div>
           </div>
         </div>
@@ -82,11 +82,6 @@ export function LoginPage() {
                   <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
                   <circle cx="12" cy="12" r="3" />
                 </svg>
-              </button>
-            </div>
-            <div className="loginMeta">
-              <button type="button" className="loginLink" disabled>
-                Forgot password?
               </button>
             </div>
             <button className="loginBtn" disabled={loading || !phoneOrEmail.trim() || !password}>

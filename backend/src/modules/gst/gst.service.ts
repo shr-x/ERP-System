@@ -237,7 +237,7 @@ export class GstService {
         const payload = {
           meta: {
             report: 'GSTR-1',
-            org_name: org?.name ?? 'Sutra ERP',
+            org_name: org?.name ?? 'Shr-x ERP',
             gstin: org?.gstin ?? '',
             period_start: args.periodStart,
             period_end: args.periodEnd,
@@ -329,7 +329,7 @@ export class GstService {
     }
 
     const html = this.renderGstr1Html({
-      orgName: org?.name ?? 'Sutra ERP',
+      orgName: org?.name ?? 'Shr-x ERP',
       gstin: org?.gstin ?? '',
       periodStart: args.periodStart,
       periodEnd: args.periodEnd,
@@ -457,7 +457,7 @@ export class GstService {
       const payload = {
         meta: {
           report: 'GSTR-3B (Summary)',
-          org_name: org?.name ?? 'Sutra ERP',
+          org_name: org?.name ?? 'Shr-x ERP',
           gstin: org?.gstin ?? '',
           period_start: args.periodStart,
           period_end: args.periodEnd,
@@ -483,7 +483,7 @@ export class GstService {
     }
 
     const html = this.renderGstr3bHtml({
-      orgName: org?.name ?? 'Sutra ERP',
+      orgName: org?.name ?? 'Shr-x ERP',
       gstin: org?.gstin ?? '',
       summary
     });

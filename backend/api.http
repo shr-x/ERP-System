@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
   "org": {
-    "name": "Sutra Retail Pvt Ltd",
+    "name": "Shr-x Retail Pvt Ltd",
     "gstin": "29ABCDE1234F1Z5",
     "legalAddress": "Bengaluru, Karnataka, India",
     "stateCode": "29"
@@ -24,7 +24,7 @@ Content-Type: application/json
   "admin": {
     "fullName": "Admin User",
     "phone": "9999999999",
-    "email": "admin@sutra.local",
+    "email": "admin@shrx.local",
     "password": "Admin@12345"
   }
 }

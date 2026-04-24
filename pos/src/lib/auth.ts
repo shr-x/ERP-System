@@ -10,7 +10,7 @@ export type MultiAuthState = {
   sessions: AuthState[];
 };
 
-const KEY = 'sutra_pos_auth_v2';
+const KEY = 'shrx_pos_auth_v2';
 
 export function getAuth(): AuthState | null {
   const multi = getJson<MultiAuthState>(KEY);

@@ -54,7 +54,7 @@ async function parseJsonSafe(res: Response) {
 async function portalFetch<T>(args: { portalKey: string; path: string; init?: RequestInit }): Promise<T> {
   const headers: Record<string, string> = {
     Accept: 'application/json',
-    'x-sutra-portal-key': args.portalKey.trim(),
+    'x-shrx-portal-key': args.portalKey.trim(),
     ...(args.init?.headers ? (args.init.headers as any) : {})
   };
 

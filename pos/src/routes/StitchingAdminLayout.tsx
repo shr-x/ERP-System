@@ -40,7 +40,7 @@ export function StitchingAdminLayout() {
             <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="" />
           </div>
           <div className="stBrandText">
-            <div className="stBrandName">Sutra</div>
+            <div className="stBrandName">Shr-x ERP</div>
             <div className="stBrandSub">Stitching Admin</div>
           </div>
         </div>

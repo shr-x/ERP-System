@@ -1,4 +1,4 @@
-tunnel: sutra
+tunnel: shrx-erp
 credentials-file: /etc/cloudflared/214e8331-d089-4038-aba2-2a1c25cd163e.json
 
 ingress:

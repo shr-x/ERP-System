@@ -6,7 +6,7 @@ import { env } from '../env/env';
 export async function buildUpiQrDataUrl(args: { invoiceNo: string; amountRupees: number }) {
   if (!env.UPI_VPA || !env.UPI_PAYEE_NAME) return undefined;
 
-  const tn = `Sutra ERP ${args.invoiceNo}`;
+  const tn = `Shr-x ERP ${args.invoiceNo}`;
   const uri =
     `upi://pay?pa=${encodeURIComponent(env.UPI_VPA)}` +
     `&pn=${encodeURIComponent(env.UPI_PAYEE_NAME)}` +
@@ -17,7 +17,7 @@ export async function buildUpiQrDataUrl(args: { invoiceNo: string; amountRupees:
   return QRCode.toDataURL(uri, { margin: 1, width: 256 });
 }
 
-export function tryLoadSutraLogoDataUrl() {
+export function tryLoadShrxErpLogoDataUrl() {
   const resolveExisting = (paths: string[]) => {
     for (const p of paths) {
       try {
@@ -28,10 +28,10 @@ export function tryLoadSutraLogoDataUrl() {
   };
 
   const trySvg = resolveExisting([
-    path.resolve(process.cwd(), 'Sutra-Logo.svg'),
-    path.resolve(process.cwd(), '..', 'Sutra-Logo.svg'),
-    path.resolve(__dirname, '..', '..', '..', 'Sutra-Logo.svg'),
-    path.resolve(__dirname, '..', '..', '..', '..', 'Sutra-Logo.svg')
+    path.resolve(process.cwd(), 'Shrx-ERP-Logo.svg'),
+    path.resolve(process.cwd(), '..', 'Shrx-ERP-Logo.svg'),
+    path.resolve(__dirname, '..', '..', '..', 'Shrx-ERP-Logo.svg'),
+    path.resolve(__dirname, '..', '..', '..', '..', 'Shrx-ERP-Logo.svg')
   ]);
   if (trySvg) {
     const buf = fs.readFileSync(trySvg);
@@ -39,10 +39,10 @@ export function tryLoadSutraLogoDataUrl() {
   }
 
   const tryPng = resolveExisting([
-    path.resolve(process.cwd(), 'Sutra-Logo.png'),
-    path.resolve(process.cwd(), '..', 'Sutra-Logo.png'),
-    path.resolve(__dirname, '..', '..', '..', 'Sutra-Logo.png'),
-    path.resolve(__dirname, '..', '..', '..', '..', 'Sutra-Logo.png')
+    path.resolve(process.cwd(), 'Shrx-ERP-Logo.png'),
+    path.resolve(process.cwd(), '..', 'Shrx-ERP-Logo.png'),
+    path.resolve(__dirname, '..', '..', '..', 'Shrx-ERP-Logo.png'),
+    path.resolve(__dirname, '..', '..', '..', '..', 'Shrx-ERP-Logo.png')
   ]);
   if (tryPng) {
     const buf = fs.readFileSync(tryPng);
@@ -50,10 +50,10 @@ export function tryLoadSutraLogoDataUrl() {
   }
 
   const tryIco = resolveExisting([
-    path.resolve(process.cwd(), 'Sutra-Logo.ico'),
-    path.resolve(process.cwd(), '..', 'Sutra-Logo.ico'),
-    path.resolve(__dirname, '..', '..', '..', 'Sutra-Logo.ico'),
-    path.resolve(__dirname, '..', '..', '..', '..', 'Sutra-Logo.ico')
+    path.resolve(process.cwd(), 'Shrx-ERP-Logo.ico'),
+    path.resolve(process.cwd(), '..', 'Shrx-ERP-Logo.ico'),
+    path.resolve(__dirname, '..', '..', '..', 'Shrx-ERP-Logo.ico'),
+    path.resolve(__dirname, '..', '..', '..', '..', 'Shrx-ERP-Logo.ico')
   ]);
   if (tryIco) {
     const buf = fs.readFileSync(tryIco);
@@ -119,7 +119,7 @@ export function renderA4InvoiceHtml(input: {
   };
   upiQrDataUrl?: string;
 }) {
-  const logo = tryLoadSutraLogoDataUrl();
+  const logo = tryLoadShrxErpLogoDataUrl();
 
   const rows = input.items
     .map(
@@ -397,7 +397,7 @@ export function renderThermalReceiptHtml(input: {
     grandTotalRupees: string;
   };
 }) {
-  const logo = input.logoDataUrl ?? tryLoadSutraLogoDataUrl();
+  const logo = input.logoDataUrl ?? tryLoadShrxErpLogoDataUrl();
   const headerLogo = logo
     ? `<img src="${logo}" style="width:22mm;height:22mm;object-fit:contain;display:block;margin:0 auto 4px auto;" />`
     : '';
@@ -574,7 +574,7 @@ export function renderA4ReturnHtml(input: {
     grandTotalRupees: string;
   };
 }) {
-  const logo = tryLoadSutraLogoDataUrl();
+  const logo = tryLoadShrxErpLogoDataUrl();
   const gstLine = input.gstin ? `<div>GSTIN: ${escapeHtml(input.gstin)}</div>` : '';
   const phoneLine = input.storePhone ? `<div>Phone: ${escapeHtml(input.storePhone)}</div>` : '';
 
@@ -713,7 +713,7 @@ export function renderThermalReturnReceiptHtml(input: {
   items: Array<{ name: string; qty: string; amountRupees: string }>;
   totals: { taxableRupees: string; cgstRupees: string; sgstRupees: string; igstRupees: string; grandTotalRupees: string };
 }) {
-  const logo = tryLoadSutraLogoDataUrl();
+  const logo = tryLoadShrxErpLogoDataUrl();
   const paymentLine = input.creditLine ? `<div class="muted">${escapeHtml(input.creditLine)}</div>` : '';
   const customerBlock = input.buyerName
     ? `
@@ -814,7 +814,7 @@ export function renderA4CreditReceiptHtml(input: {
   paymentMethod: string;
   paymentRef?: string | null;
 }) {
-  const logo = tryLoadSutraLogoDataUrl();
+  const logo = tryLoadShrxErpLogoDataUrl();
   const gstinLine = input.gstin ? `<div>GSTIN: ${escapeHtml(input.gstin)}</div>` : '';
   const phoneLine = input.storePhone ? `<div>Phone: ${escapeHtml(input.storePhone)}</div>` : '';
   const custGstin = input.customerGstin ? `<div>GSTIN: ${escapeHtml(input.customerGstin)}</div>` : '';
@@ -906,7 +906,7 @@ export function renderA4CreditSettlementHtml(input: {
   paymentMethod: string;
   paymentRef?: string | null;
 }) {
-  const logo = tryLoadSutraLogoDataUrl();
+  const logo = tryLoadShrxErpLogoDataUrl();
   const gstinLine = input.gstin ? `<div>GSTIN: ${escapeHtml(input.gstin)}</div>` : '';
   const phoneLine = input.storePhone ? `<div>Phone: ${escapeHtml(input.storePhone)}</div>` : '';
 
@@ -991,7 +991,7 @@ export function renderThermalCreditReceiptHtml(input: {
   amountRupees: string;
   paymentLine: string;
 }) {
-  const logo = tryLoadSutraLogoDataUrl();
+  const logo = tryLoadShrxErpLogoDataUrl();
   return `
     <html>
       <head>
@@ -1054,7 +1054,7 @@ export function renderThermalCreditSettlementHtml(input: {
   amountRupees: string;
   paymentLine: string;
 }) {
-  const logo = tryLoadSutraLogoDataUrl();
+  const logo = tryLoadShrxErpLogoDataUrl();
   return `
     <html>
       <head>

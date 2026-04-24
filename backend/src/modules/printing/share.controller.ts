@@ -188,7 +188,7 @@ export class ShareController {
 
     const imageUrl = await this.resolveStitchingColorImageUrlForDocs(order.selectedColorImageUrl ?? undefined);
     const html = renderStitchingTailorSlipA4({
-      storeName: store?.name ?? org?.name ?? 'Sutra ERP',
+      storeName: store?.name ?? org?.name ?? 'Shr-x ERP',
       gstin: store?.gstin ?? undefined,
       storePhone: store?.phone ?? undefined,
       storeAddress: store?.address ?? undefined,

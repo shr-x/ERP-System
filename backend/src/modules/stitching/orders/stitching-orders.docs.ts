@@ -1,4 +1,4 @@
-import { tryLoadSutraLogoDataUrl } from '../../printing/printing.templates';
+import { tryLoadShrxErpLogoDataUrl } from '../../printing/printing.templates';
 
 function escapeHtml(input: string) {
   return input
@@ -32,7 +32,7 @@ export function renderStitchingCustomerBillA4(input: {
   gstRupees: string;
   totalRupees: string;
 }) {
-  const logo = tryLoadSutraLogoDataUrl();
+  const logo = tryLoadShrxErpLogoDataUrl();
   const rows = Object.entries(input.measurements)
     .map(([k, v]) => `<tr><td>${escapeHtml(k)}</td><td style="text-align:right;">${escapeHtml(String(v))}</td></tr>`)
     .join('');
@@ -236,7 +236,7 @@ export function renderStitchingTailorSlipA4(input: {
   measurements: Record<string, number>;
   materialUsageMeters?: string;
 }) {
-  const logo = tryLoadSutraLogoDataUrl();
+  const logo = tryLoadShrxErpLogoDataUrl();
   const rows = Object.entries(input.measurements)
     .map(([k, v]) => `<tr><td>${escapeHtml(k)}</td><td style="text-align:right;">${escapeHtml(String(v))}</td></tr>`)
     .join('');

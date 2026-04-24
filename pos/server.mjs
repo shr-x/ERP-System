@@ -106,7 +106,6 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(args.port, '0.0.0.0', () => {
-  process.stdout.write(`Sutra POS server running: http://localhost:${args.port}/\n`);
+  process.stdout.write(`Shr-x ERP POS server running: http://localhost:${args.port}/\n`);
   process.stdout.write(`API proxy: ${args.apiPrefix} -> ${args.target}\n`);
 });
-

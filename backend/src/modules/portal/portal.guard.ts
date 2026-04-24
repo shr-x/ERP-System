@@ -7,7 +7,7 @@ export class PortalGuard implements CanActivate {
     const accessKey = env.PORTAL_ACCESS_KEY?.trim();
     if (!accessKey) throw new ForbiddenException('Portal is disabled');
     const req = context.switchToHttp().getRequest();
-    const key = (req?.headers?.['x-sutra-portal-key'] || req?.headers?.['X-SUTRA-PORTAL-KEY']) as string | undefined;
+    const key = (req?.headers?.['x-shrx-portal-key'] || req?.headers?.['X-SHRX-PORTAL-KEY']) as string | undefined;
     if (!key || key.trim() !== accessKey) throw new ForbiddenException('Invalid portal key');
     return true;
   }

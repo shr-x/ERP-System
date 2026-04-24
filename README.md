@@ -1,6 +1,46 @@
-# Sutra ERP
+# Shr-x ERP
 
 GST-first retail ERP for small Indian businesses: a fast POS + a lightweight Admin Backoffice, backed by a single PostgreSQL database. Designed for B2C billing, GST reporting, and simple daily operations.
+
+## Screenshots
+
+### POS
+
+![POS](<Images/POS.png>)
+
+### Admin Backoffice
+
+![Admin Panel](<Images/Admin Panel.png>)
+
+### GST report
+
+![GST report](<Images/GST report.png>)
+
+### A4 Tax Invoice
+
+![Tax Invoice](<Images/TAX Invoice.png>)
+
+### Thermal bill
+
+![Thermal Bill](<Images/Thermal Bill.png>)
+
+### WhatsApp share bill
+
+![Whatsapp Bill](<Images/Whatsapp Bill.png>)
+
+## Build story (what was broken, what I fixed)
+
+This project started as a practical problem: a small retail counter needs a POS that is fast, works without internet, and still produces GST-correct documents.
+
+The early pain points were predictable:
+
+- Billing needed to be B2C-first (walk-in customer by default) while still supporting B2B GSTIN flows.
+- Stock had to be trustworthy (FIFO batch-backed) so “in stock” actually means available.
+- Accounting had to be non-negotiable (double-entry: Total Debit = Total Credit) to prevent bad books.
+- Printing had to be real-world usable: thermal for counter speed + A4 for GST compliance.
+- Sharing had to be one-tap (token links) so customers can receive a receipt on WhatsApp without logging in.
+
+The work focused on turning those constraints into default behavior: strict validations for GST, enforced posting balance in every journal entry, and a print/share pipeline that generates both formats consistently.
 
 ## What’s inside
 
@@ -27,7 +67,7 @@ flowchart LR
   UI["POS + Backoffice UI\n(Vite SPA)"]
   API["Backend API\n(NestJS)"]
   JOBS["Exports & Printing\n(XLSX / PDF)"]
-  DB[("PostgreSQL\nsutra_erp")]
+  DB[("PostgreSQL\nshrx_erp")]
 
   UI -->|/api| API
   API --> DB
@@ -219,12 +259,12 @@ docker compose -f docker-compose.dev.yml up -d
 Create `backend/.env` (copy `backend/.env.example` and edit if needed):
 
 ```env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5433/sutra_erp?schema=public"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5433/shrx_erp?schema=public"
 PORT=4000
 JWT_ACCESS_SECRET="change_me"
 PUPPETEER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-UPI_VPA="sutra@upi"
-UPI_PAYEE_NAME="Sutra Retail"
+UPI_VPA="shrx@upi"
+UPI_PAYEE_NAME="Shr-x Retail"
 ```
 
 Create `pos/.env.production` (or `.env` for local dev):
@@ -292,7 +332,7 @@ Use a stable Postgres GUI:
   - Port: `5433`
   - User: `postgres`
   - Password: `postgres`
-  - DB: `sutra_erp`
+- DB: `shrx_erp`
 
 ## Backoffice features
 
@@ -570,7 +610,7 @@ Token-gated share endpoints (no JWT):
 ### Media (`/media/*`) and assets (`/assets/*`)
 - `GET /media/products/:id` product image bytes
 - `GET /media/categories/:id` category image bytes
-- `GET /assets/logo.ico` Sutra icon
+- `GET /assets/logo.ico` Shr-x ERP icon
 
 ### Accounting (`/accounting/*`)
 - `POST /accounting/setup-system-accounts` setup system chart of accounts (JWT + ADMIN)

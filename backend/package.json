@@ -14,7 +14,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Sutra ERP Backend (NestJS + PostgreSQL + Prisma)",
+  "description": "Shr-x ERP Backend (NestJS + PostgreSQL + Prisma)",
   "engines": {
     "node": ">=22 <23"
   },

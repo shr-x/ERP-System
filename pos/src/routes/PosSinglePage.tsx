@@ -116,8 +116,8 @@ type HoldBill = {
   upiRef: string;
 };
 
-const POS_KEY = 'sutra_pos_state_v1';
-const HOLDS_KEY = 'sutra_pos_holds_v1';
+const POS_KEY = 'shrx_pos_state_v1';
+const HOLDS_KEY = 'shrx_pos_holds_v1';
 
 type PosState = { warehouseId?: string; orderType?: 'B2C' | 'B2B' };
 
@@ -1592,7 +1592,7 @@ export function PosSinglePage() {
       <div className="posShell">
         <div className="posSide">
           <div className="posSideTop">
-            <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="Sutra" className="posSideLogo" />
+            <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="Shr-x ERP" className="posSideLogo" />
           </div>
           <div className="posNav">
             <button className={`posNavBtn ${activeNav === 'POS' ? 'active' : ''}`} onClick={() => {
@@ -2762,7 +2762,7 @@ export function PosSinglePage() {
               <div className="gGrid2" style={{ marginTop: 0 }}>
                 <div className="gField">
                   <label>Store Name</label>
-                  <input value={storeForm.name} onChange={(e) => setStoreForm((p) => ({ ...p, name: e.target.value }))} placeholder="Sutra Collections" />
+                  <input value={storeForm.name} onChange={(e) => setStoreForm((p) => ({ ...p, name: e.target.value }))} placeholder="Shr-x Collections" />
                 </div>
                 <div className="gField">
                   <label>Phone Number</label>

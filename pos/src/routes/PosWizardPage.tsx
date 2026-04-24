@@ -49,8 +49,8 @@ type HoldBill = {
   upiRef: string;
 };
 
-const POS_KEY = 'sutra_pos_state_v1';
-const HOLDS_KEY = 'sutra_pos_holds_v1';
+const POS_KEY = 'shrx_pos_state_v1';
+const HOLDS_KEY = 'shrx_pos_holds_v1';
 
 type PosState = { warehouseId?: string };
 type Step = 1 | 2 | 3 | 4 | 5;
@@ -535,7 +535,7 @@ export function PosWizardPage() {
     <div className="gWrap">
       <div className="gTop">
         <div className="gBrand">
-          <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="Sutra" className="gLogo" />
+          <img src={`${apiBaseUrl()}/assets/logo.svg`} alt="Shr-x ERP" className="gLogo" />
           <div className="gMeta">
             <div className="gTitle">Level {step} / 5</div>
             <div className="gSub">

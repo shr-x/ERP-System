@@ -11,14 +11,13 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "name": "Sutra Collections",
+  "name": "Shr-x Collections",
   "phone": "911234567890",
   "address": "MG Road, Bengaluru, Karnataka",
   "gstin": "29ABCDE1234F1Z5",
-  "footerNote": "Thank you for shopping with Sutra"
+  "footerNote": "Thank you for shopping with Shr-x ERP"
 }
 
 ### Loyalty lookup (for POS customer)
 GET {{baseUrl}}/loyalty?phone=9123456789
 Authorization: Bearer {{token}}
-

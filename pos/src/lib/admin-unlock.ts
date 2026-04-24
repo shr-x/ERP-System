@@ -1,4 +1,4 @@
-const KEY_PREFIX = 'sutra_admin_unlock_v1';
+const KEY_PREFIX = 'shrx_admin_unlock_v1';
 
 function key(userId: string) {
   return `${KEY_PREFIX}:${userId}`;
@@ -20,4 +20,3 @@ export function setAdminUnlocked(userId: string, ttlMs: number) {
 export function clearAdminUnlocked(userId: string) {
   sessionStorage.removeItem(key(userId));
 }
-

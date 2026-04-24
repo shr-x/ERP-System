@@ -5,9 +5,9 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-sutra_erp}
+      POSTGRES_DB: ${POSTGRES_DB:-shrx_erp}
     volumes:
-      - sutra_postgres_data:/var/lib/postgresql/data
+      - shrx_postgres_data:/var/lib/postgresql/data
 
   backend:
     build:
@@ -16,19 +16,19 @@ services:
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/sutra_erp?schema=public}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/shrx_erp?schema=public}
       PORT: 4000
       JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-Adue6P]b.]cMpLQSECdgXB;O/{,Z+07(>{@aa/vptVL5C@ETwaTPhR9/Oik5>qxYK.nIZ@%u_JNwuV.*GNmnpf}
       LOG_LEVEL: ${LOG_LEVEL:-info}
       PORTAL_ACCESS_KEY: ${PORTAL_ACCESS_KEY:-ziaRU3SaWVt49o5eTTwOqRWaYeQ2vWUuZe8THBWqIpjJivJcUV7G0K6YH6fE6OwMlCNyqguF3As2owxlH5gNSi}
-      UPI_VPA: ${UPI_VPA:-sutra@upi}
-      UPI_PAYEE_NAME: ${UPI_PAYEE_NAME:-Sutra_Collections}
+      UPI_VPA: ${UPI_VPA:-shrx@upi}
+      UPI_PAYEE_NAME: ${UPI_PAYEE_NAME:-Shrx_Collections}
       STITCHING_SERVICE_PRODUCT_CODE: ${STITCHING_SERVICE_PRODUCT_CODE:-STITCH-SVC}
       STITCHING_TAILOR_EXPENSE_ACCOUNT_CODE: ${STITCHING_TAILOR_EXPENSE_ACCOUNT_CODE:-EXPENSE_TAILORING}
     ports:
       - "4000:4000"
     volumes:
-      - sutra_storage:/app/storage
+      - shrx_storage:/app/storage
 
   pos:
     build:
@@ -42,7 +42,7 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     restart: unless-stopped
-    command: tunnel --config /etc/cloudflared/config.yml run sutra
+    command: tunnel --config /etc/cloudflared/config.yml run shrx-erp
     volumes:
       - C:\Users\spart\.cloudflared:/etc/cloudflared:ro
     depends_on:
@@ -50,5 +50,5 @@ services:
       - backend
 
 volumes:
-  sutra_postgres_data:
-  sutra_storage:
+  shrx_postgres_data:
+  shrx_storage:

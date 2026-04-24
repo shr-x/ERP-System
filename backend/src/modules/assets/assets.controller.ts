@@ -8,10 +8,10 @@ export class AssetsController {
   @Get('logo.svg')
   async logoSvg(@Res() res: Response) {
     const candidates = [
-      path.resolve(process.cwd(), 'Sutra-Logo.svg'),
-      path.resolve(process.cwd(), '..', 'Sutra-Logo.svg'),
-      path.resolve(__dirname, '..', '..', '..', 'Sutra-Logo.svg'),
-      path.resolve(__dirname, '..', '..', '..', '..', 'Sutra-Logo.svg')
+      path.resolve(process.cwd(), 'Shrx-ERP-Logo.svg'),
+      path.resolve(process.cwd(), '..', 'Shrx-ERP-Logo.svg'),
+      path.resolve(__dirname, '..', '..', '..', 'Shrx-ERP-Logo.svg'),
+      path.resolve(__dirname, '..', '..', '..', '..', 'Shrx-ERP-Logo.svg')
     ];
     const svgPath = candidates.find((p) => {
       try {
@@ -31,8 +31,20 @@ export class AssetsController {
 
   @Get('logo.ico')
   async logoIco(@Res() res: Response) {
-    const icoPath = path.resolve(process.cwd(), '..', 'Sutra-Logo.ico');
-    if (!fs.existsSync(icoPath)) {
+    const candidates = [
+      path.resolve(process.cwd(), 'Shrx-ERP-Logo.ico'),
+      path.resolve(process.cwd(), '..', 'Shrx-ERP-Logo.ico'),
+      path.resolve(__dirname, '..', '..', '..', 'Shrx-ERP-Logo.ico'),
+      path.resolve(__dirname, '..', '..', '..', '..', 'Shrx-ERP-Logo.ico')
+    ];
+    const icoPath = candidates.find((p) => {
+      try {
+        return fs.existsSync(p);
+      } catch {
+        return false;
+      }
+    });
+    if (!icoPath) {
       res.status(404).json({ message: 'Logo not found' });
       return;
     }

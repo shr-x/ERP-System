@@ -1,15 +1,15 @@
 services:
   postgres:
     image: postgres:16
-    container_name: sutra-postgres
+    container_name: shrx-erp-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: sutra_erp
+      POSTGRES_DB: shrx_erp
     ports:
       - "5433:5432"
     volumes:
-      - sutra_postgres_data:/var/lib/postgresql/data
+      - shrx_postgres_data:/var/lib/postgresql/data
 
 volumes:
-  sutra_postgres_data:
+  shrx_postgres_data:

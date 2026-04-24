@@ -60,7 +60,7 @@ export class FeedbackController {
         <head>
           <meta charset="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>Sutra Feedback</title>
+          <title>Shr-x ERP Feedback</title>
           <style>
             :root { --bg: #f8f9fb; --card: #ffffff; --line: #e5e7eb; --fg: #111827; --muted: #6b7280; --accent: #ef4444; }
             * { box-sizing: border-box; }
@@ -88,7 +88,7 @@ export class FeedbackController {
         </head>
         <body>
           <div class="card">
-            <div class="brand">Sutra</div>
+            <div class="brand">Shr-x ERP</div>
             <div class="title">How was your experience?</div>
             <div class="sub">Your feedback helps us improve</div>
             <div class="meta">
@@ -233,7 +233,7 @@ function renderFeedbackDonePage(input: { already: boolean }) {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Sutra Feedback</title>
+        <title>Shr-x ERP Feedback</title>
         <style>
           body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background:#f8f9fb; margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; color:#111827; }
           .card { width: 100%; max-width: 460px; background:#fff; border:1px solid #e5e7eb; border-radius:16px; padding:24px; box-shadow:0 22px 60px rgba(15,23,42,0.08); text-align:center; }

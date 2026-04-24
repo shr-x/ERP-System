@@ -32,8 +32,8 @@ type CartLine = {
   discountRupees: number;
 };
 
-const POS_KEY = 'sutra_pos_state_v1';
-const HOLDS_KEY = 'sutra_pos_holds_v1';
+const POS_KEY = 'shrx_pos_state_v1';
+const HOLDS_KEY = 'shrx_pos_holds_v1';
 
 type PosState = {
   warehouseId?: string;
@@ -528,7 +528,7 @@ export function PosPage() {
     <div className="container">
       <div className="topbar">
         <div className="left">
-          <div className="brand">Sutra POS</div>
+          <div className="brand">Shr-x ERP POS</div>
           {store ? <span className="pill">{store.code} · {store.name}</span> : null}
           {auth ? <span className="pill">{auth.user.fullName}</span> : null}
           <span className="pill">Holds: {holds.length}</span>

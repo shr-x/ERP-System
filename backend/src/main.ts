@@ -21,7 +21,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new BigIntInterceptor());
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Sutra ERP + Stitching Admin API')
+    .setTitle('Shr-x ERP + Stitching Admin API')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
