@@ -29,18 +29,7 @@ services:
       - "4000:4000"
     volumes:
       - sutra_storage:/app/storage
-  
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    restart: unless-stopped
-    command: tunnel --config /etc/cloudflared/config.yml run sutra
-    volumes:
-      - C:\Users\spart\.cloudflared:/etc/cloudflared:ro
-    depends_on:
-      - pos
-      - backend
 
-  
   pos:
     build:
       context: ./pos
@@ -49,6 +38,16 @@ services:
       - backend
     ports:
       - "5173:80"
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel run sutra
+    volumes:
+      - 'C:\Users\spart\.cloudflared:/etc/cloudflared:ro'
+    depends_on:
+      - pos
+      - backend
 
 volumes:
   sutra_postgres_data:
