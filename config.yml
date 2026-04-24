@@ -1,0 +1,9 @@
+tunnel: sutra
+credentials-file: /etc/cloudflared/214e8331-d089-4038-aba2-2a1c25cd163e.json
+
+ingress:
+  - hostname: pos.shr-x.in
+    service: http://pos:80
+  - hostname: api.shr-x.in
+    service: http://backend:4000
+  - service: http_status:404
