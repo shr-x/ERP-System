@@ -6,10 +6,13 @@ type TemplateCategory = 'FULL_SET' | 'TOP' | 'PANTS' | 'SLEEVES';
 type MeasurementProfile = { id: string; measurementName: string; fields: string[] };
 type Color = { id: string; colorName: string; colorCode: string; imageUrl?: string | null };
 type MaterialConfig = { id: string; erpMaterialId: string; metersRequired: string };
+type StitchingCategoryRef = { id: string; name: string; posVisible?: boolean };
 type Template = {
   id: string;
   name: string;
   category: TemplateCategory;
+  categoryId?: string | null;
+  categoryRef?: StitchingCategoryRef | null;
   measurementProfiles: MeasurementProfile[];
   colors: Color[];
   materialConfigs: MaterialConfig[];
@@ -40,6 +43,10 @@ function resolveImageUrl(url?: string | null) {
   if (u.startsWith('http://') || u.startsWith('https://')) return u;
   if (u.startsWith('/')) return `${apiBaseUrl()}${u}`;
   return u;
+}
+
+function templateCategoryLabel(t: Template) {
+  return t.categoryRef?.name || t.category;
 }
 
 export function StitchingPosModal({ open, onClose, onCreated, billCustomer, billCustomerPhone }: Props) {
@@ -368,7 +375,7 @@ export function StitchingPosModal({ open, onClose, onCreated, billCustomer, bill
                   <StLabel>Template</StLabel>
                   <StSelect value={templateId} onChange={(e) => setTemplateId(e.target.value)} invalid={!templateId}>
                     <option value="">Select</option>
-                    {templates.map((t) => <option key={t.id} value={t.id}>{t.name} ({t.category})</option>)}
+                    {templates.map((t) => <option key={t.id} value={t.id}>{t.name} ({templateCategoryLabel(t)})</option>)}
                   </StSelect>
                 </div>
 

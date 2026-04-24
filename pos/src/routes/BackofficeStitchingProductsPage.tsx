@@ -968,7 +968,7 @@ export function BackofficeStitchingProductsPage(props?: {
   const filteredProducts = useMemo(() => {
     const v = productsQ.trim().toLowerCase();
     if (!v) return products;
-    return (products || []).filter((p) => `${p.name} ${p.category}`.toLowerCase().includes(v));
+    return (products || []).filter((p) => `${p.name} ${templateCategoryLabel(p)}`.toLowerCase().includes(v));
   }, [products, productsQ]);
 
   return (
@@ -1030,7 +1030,7 @@ export function BackofficeStitchingProductsPage(props?: {
                   </div>
                   <div className="tw-p-4">
                     <div className="tw-font-medium tw-text-ink tw-truncate">{p.name}</div>
-                    <div className="tw-mt-1"><StBadge tone="neutral">{p.category}</StBadge></div>
+                    <div className="tw-mt-1"><StBadge tone="neutral">{templateCategoryLabel(p)}</StBadge></div>
                   </div>
                 </button>
               );
